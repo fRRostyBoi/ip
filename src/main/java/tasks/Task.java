@@ -1,17 +1,19 @@
 package tasks;
 
-public class Task {
+public abstract class Task {
 
     protected String name;
     protected boolean completed;
 
-    public Task(String name) {
+    protected Task(String name) {
         this.name = name;
     }
 
+    public abstract String getTypeIcon();
+
     @Override
     public String toString() {
-        return "[" + getStatusMsg() + "] " + name;
+        return "[" + getStatusMsg() + "][" + getTypeIcon() + "] " + name;
     }
 
     private String getStatusMsg() {

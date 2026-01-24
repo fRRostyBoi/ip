@@ -1,4 +1,7 @@
+import tasks.Deadline;
+import tasks.Event;
 import tasks.Task;
+import tasks.ToDo;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -33,8 +36,14 @@ public class NotJippity {
 
             // Terminate if the user types "bye" in any case combination, otherwise just echoes
             switch (command) {
-                case "add":
-                    addTask(argString);
+                case "todo":
+                    addToDo(argString);
+                    break;
+                case "deadline":
+                    addDeadline(argString);
+                    break;
+                case "event":
+                    addEvent(argString);
                     break;
                 case "list":
                     listTasks();
@@ -64,12 +73,102 @@ public class NotJippity {
     }
 
     /**
-     * Adds a task into the tasklist and executes feedback
-     * @param taskString The task to add into the tasklist
+     * Adds a ToDo task into the tasklist and executes feedback
+     * Executes error feedback if the task name is empty
+     * @param argString User's input command arguments
      */
-    private static void addTask(String taskString) {
-        tasklist.add(new Task(taskString));
-        System.out.println(msgPrefix + " Task added: " + taskString);
+    private static void addToDo(String argString) {
+        // If the task name is empty
+        if (argString.isEmpty()) {
+            System.out.println(msgPrefix + " What am I supposed to call this task bruh, specify a name");
+            return;
+        }
+
+        Task task = new ToDo(argString);
+        tasklist.add(task);
+        System.out.println(msgPrefix + " ++ " + task + " (" + tasklist.size() + " total)");
+    }
+
+    /**
+     * Adds a Deadline task into the tasklist and executes feedback.
+     * Executes error feedback if the task name is empty
+     * User input must follow the "deadline --by {@literal <}date{@literal >}" format, failing which an error feedback will be executed
+     * @param argString User's input command arguments
+     */
+    private static void addDeadline(String argString) {
+        String[] argSets = argString.split("--by");
+        // If the user didn't include --by
+        if (argSets.length == 1) {
+            System.out.println(msgPrefix + " Gimme a deadline date using \"--by <date>\" too man");
+            return;
+        }
+
+        String taskName = argSets[0].trim(),
+               byDate = argSets[1].trim();
+
+        // If the task name or the argument following --by is empty
+        if (taskName.isEmpty()) {
+            System.out.println(msgPrefix + " What am I supposed to call this task bruh, specify a name");
+            return;
+        }
+        if (byDate.isEmpty()) {
+            System.out.println(msgPrefix + " Gimme a deadline date using \"--by <date>\" too man");
+            return;
+        }
+
+        Task task = new Deadline(taskName, byDate);
+        tasklist.add(task);
+        System.out.println(msgPrefix + " ++ " + task + " (" + tasklist.size() + " total)");
+    }
+
+    /**
+     * Adds an Event task into the tasklist and executes feedback.
+     * Executes error feedback if the task name is empty
+     * User input must follow the "deadline --from {@literal <}date{@literal >} --to {@literal <}date{@literal >}" format, failing which an error feedback will be executed
+     * @param argString User's input command arguments
+     */
+    private static void addEvent(String argString) {
+        String fromArgErrorMsg = " Sooo when's it from? (add \"--from <date>\" too pls)",
+               toArgErrorMsg = " ... and when's it until? (remem to append \"--to <date>\")";
+
+        String[] argSets = argString.split("--from");
+        // If the user didn't include --from
+        if (argSets.length == 1) {
+            System.out.println(msgPrefix + fromArgErrorMsg);
+            return;
+        }
+
+        String taskName = argSets[0].trim(),
+               backArgs = argSets[1].trim();
+        // If the task name is empty
+        if (taskName.isEmpty()) {
+            System.out.println(msgPrefix + " What am I supposed to call this task bruh, specify a name");
+            return;
+        }
+
+        String[] fromToArgSets = backArgs.split("--to");
+        // If the user didn't include --to, or if did something like --from --to which will have 0 length after splitting
+        if (fromToArgSets.length <= 1) {
+            System.out.println(msgPrefix + toArgErrorMsg);
+            return;
+        }
+
+        String fromDate = fromToArgSets[0].trim(),
+               toDate = fromToArgSets[1].trim();
+
+        // If the arguments following --from or --to is empty
+        if (fromDate.isEmpty()) {
+            System.out.println(msgPrefix + fromArgErrorMsg);
+            return;
+        }
+        if (toDate.isEmpty()) {
+            System.out.println(msgPrefix + toArgErrorMsg);
+            return;
+        }
+
+        Task task = new Event(taskName, fromDate, toDate);
+        tasklist.add(task);
+        System.out.println(msgPrefix + " ++ " + task + " (" + tasklist.size() + " tasks)");
     }
 
     /**
