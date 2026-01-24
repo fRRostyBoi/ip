@@ -17,7 +17,7 @@ public abstract class Task {
     }
 
     private String getStatusMsg() {
-        return completed ? "✓" : " ";
+        return isCompleted() ? "✓" : " ";
     }
 
     public boolean isCompleted() {
