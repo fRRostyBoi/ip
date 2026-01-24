@@ -177,8 +177,15 @@ public class NotJippity {
     private static void listTasks() {
         System.out.println(msgPrefix + " Here's what we have so far:");
 
+        int maxDigits = 1 + (int) Math.floor(Math.log10(tasklist.size()));
+
         int index = 1;
-        for (Task task : tasklist) System.out.println(msgPrefixSpacer + " " + index++ + ". " + task);
+        for (Task task : tasklist) {
+            int curDigits = 1 + (int) Math.floor(Math.log10(index));
+            StringBuilder indexStr = new StringBuilder(index++ + ". ");
+            for (int i = 0; i < maxDigits - curDigits; i++) indexStr.append(" ");
+            System.out.println(msgPrefixSpacer + " " + indexStr + task);
+        }
     }
 
     /**
