@@ -1,0 +1,35 @@
+randCmd
+list
+test
+   list
+   list 2 list
+todo
+todo ToDo 1
+todo      ToDo Plus Leading Space
+list
+deadline
+deadline --by
+deadline New Deadline --by
+deadline --by Date Here
+deadline New Deadline --by This Date
+list
+event
+event --from
+event Test --from
+event Test --from Two
+event --from Two --to
+event --from Two --to Three
+event --from --to
+event NameHere --from --to ToDate
+event --from --to ToDate
+event Name --to ToDate --from FromDate
+event --to ToDate --from FromDate
+event --to --from FromDate
+event Name --to --from
+event TestEvent --from This Sat --to Next Wed
+todo   Spaced     Out
+deadline    Spaced     Out   2   --by    Tomorrow
+event      Spaced   Out   3 --from    This Day    --to   That Day
+list
+byeeee
+bye

@@ -19,3 +19,10 @@ java -classpath ..\bin NotJippity < input.txt > ACTUAL.TXT
 
 REM compare the output to the expected output
 FC ACTUAL.TXT EXPECTED.TXT
+
+if ERRORLEVEL 1 (
+    echo Test Result: FAILED
+) else (
+    echo Test Result: PASSED
+)
+PAUSE
