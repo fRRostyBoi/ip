@@ -11,7 +11,7 @@ public class Deadline extends Task {
 
     @Override
     public String getTypeIcon() {
-        return "⏰";
+        return "D";
     }
 
     @Override

@@ -12,7 +12,7 @@ public class Event extends Task {
 
     @Override
     public String getTypeIcon() {
-        return "\uD83D\uDCC5";
+        return "E";
     }
 
     @Override

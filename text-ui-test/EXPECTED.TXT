@@ -13,71 +13,71 @@ ____________________________________________________________
 
 >> [NotJippity] Uhhh pls follow this format am confused: "todo <Name>")
 
->> [NotJippity] ++ [ ][?] ToDo 1 (1 total)
+>> [NotJippity] ++ [ ][T] ToDo 1 (1 total)
 
->> [NotJippity] ++ [ ][?] ToDo Plus Leading Space (2 total)
-
->> [NotJippity] Here's what we have so far:
-             1. [ ][?] ToDo 1
-             2. [ ][?] ToDo Plus Leading Space
-
->> [NotJippity] Uhhh pls follow this format am confused: "deadline <Name> --by <date>")
-
->> [NotJippity] Uhhh pls follow this format am confused: "deadline <Name> --by <date>")
-
->> [NotJippity] Uhhh pls follow this format am confused: "deadline <Name> --by <date>")
-
->> [NotJippity] Uhhh pls follow this format am confused: "deadline <Name> --by <date>")
-
->> [NotJippity] ++ [ ][?] New Deadline [This Date] (3 total)
+>> [NotJippity] ++ [ ][T] ToDo Plus Leading Space (2 total)
 
 >> [NotJippity] Here's what we have so far:
-             1. [ ][?] ToDo 1
-             2. [ ][?] ToDo Plus Leading Space
-             3. [ ][?] New Deadline [This Date]
+             1. [ ][T] ToDo 1
+             2. [ ][T] ToDo Plus Leading Space
 
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+>> [NotJippity] Uhhh pls follow this format am confused: "deadline <Name> --by <date>")
 
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+>> [NotJippity] Uhhh pls follow this format am confused: "deadline <Name> --by <date>")
 
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+>> [NotJippity] Uhhh pls follow this format am confused: "deadline <Name> --by <date>")
 
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+>> [NotJippity] Uhhh pls follow this format am confused: "deadline <Name> --by <date>")
 
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
-
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
-
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
-
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
-
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
-
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
-
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
-
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
-
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
-
->> [NotJippity] ++ [ ][?] TestEvent [This Sat - Next Wed] (4 tasks)
-
->> [NotJippity] ++ [ ][?] Spaced     Out (5 total)
-
->> [NotJippity] ++ [ ][?] Spaced     Out   2 [Tomorrow] (6 total)
-
->> [NotJippity] ++ [ ][?] Spaced   Out   3 [This Day - That Day] (7 tasks)
+>> [NotJippity] ++ [ ][D] New Deadline [This Date] (3 total)
 
 >> [NotJippity] Here's what we have so far:
-             1. [ ][?] ToDo 1
-             2. [ ][?] ToDo Plus Leading Space
-             3. [ ][?] New Deadline [This Date]
-             4. [ ][?] TestEvent [This Sat - Next Wed]
-             5. [ ][?] Spaced     Out
-             6. [ ][?] Spaced     Out   2 [Tomorrow]
-             7. [ ][?] Spaced   Out   3 [This Day - That Day]
+             1. [ ][T] ToDo 1
+             2. [ ][T] ToDo Plus Leading Space
+             3. [ ][D] New Deadline [This Date]
+
+>> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+
+>> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+
+>> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+
+>> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+
+>> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+
+>> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+
+>> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+
+>> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+
+>> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+
+>> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+
+>> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+
+>> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+
+>> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+
+>> [NotJippity] ++ [ ][E] TestEvent [This Sat - Next Wed] (4 tasks)
+
+>> [NotJippity] ++ [ ][T] Spaced     Out (5 total)
+
+>> [NotJippity] ++ [ ][D] Spaced     Out   2 [Tomorrow] (6 total)
+
+>> [NotJippity] ++ [ ][E] Spaced   Out   3 [This Day - That Day] (7 tasks)
+
+>> [NotJippity] Here's what we have so far:
+             1. [ ][T] ToDo 1
+             2. [ ][T] ToDo Plus Leading Space
+             3. [ ][D] New Deadline [This Date]
+             4. [ ][E] TestEvent [This Sat - Next Wed]
+             5. [ ][T] Spaced     Out
+             6. [ ][D] Spaced     Out   2 [Tomorrow]
+             7. [ ][E] Spaced   Out   3 [This Day - That Day]
 
 >> [NotJippity] byeeee
 

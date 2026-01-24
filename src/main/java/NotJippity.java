@@ -78,9 +78,11 @@ public class NotJippity {
      * @param argString User's input command arguments
      */
     private static void addToDo(String argString) {
+        String errorMsg = " Uhhh pls follow this format am confused: \"todo <Name>\")";
+
         // If the task name is empty
         if (argString.isEmpty()) {
-            System.out.println(msgPrefix + " What am I supposed to call this task bruh, specify a name");
+            System.out.println(msgPrefix + errorMsg);
             return;
         }
 
@@ -96,10 +98,12 @@ public class NotJippity {
      * @param argString User's input command arguments
      */
     private static void addDeadline(String argString) {
+        String errorMsg = " Uhhh pls follow this format am confused: \"deadline <Name> --by <date>\")";
+
         String[] argSets = argString.split("--by");
-        // If the user didn't include --by
-        if (argSets.length == 1) {
-            System.out.println(msgPrefix + " Gimme a deadline date using \"--by <date>\" too man");
+        // If the user didn't include --by or the name
+        if (argSets.length <= 1) {
+            System.out.println(msgPrefix + errorMsg);
             return;
         }
 
@@ -108,11 +112,11 @@ public class NotJippity {
 
         // If the task name or the argument following --by is empty
         if (taskName.isEmpty()) {
-            System.out.println(msgPrefix + " What am I supposed to call this task bruh, specify a name");
+            System.out.println(msgPrefix + errorMsg);
             return;
         }
         if (byDate.isEmpty()) {
-            System.out.println(msgPrefix + " Gimme a deadline date using \"--by <date>\" too man");
+            System.out.println(msgPrefix + errorMsg);
             return;
         }
 
@@ -128,13 +132,12 @@ public class NotJippity {
      * @param argString User's input command arguments
      */
     private static void addEvent(String argString) {
-        String fromArgErrorMsg = " Sooo when's it from? (add \"--from <date>\" too pls)",
-               toArgErrorMsg = " ... and when's it until? (remem to append \"--to <date>\")";
+        String errorMsg = " Uhhh pls follow this format am confused: \"event <Name> --from <date> --to <date>\")";
 
         String[] argSets = argString.split("--from");
-        // If the user didn't include --from
-        if (argSets.length == 1) {
-            System.out.println(msgPrefix + fromArgErrorMsg);
+        // If the user didn't include --from or something like event --from
+        if (argSets.length <= 1) {
+            System.out.println(msgPrefix + errorMsg);
             return;
         }
 
@@ -142,14 +145,14 @@ public class NotJippity {
                backArgs = argSets[1].trim();
         // If the task name is empty
         if (taskName.isEmpty()) {
-            System.out.println(msgPrefix + " What am I supposed to call this task bruh, specify a name");
+            System.out.println(msgPrefix + errorMsg);
             return;
         }
 
         String[] fromToArgSets = backArgs.split("--to");
         // If the user didn't include --to, or if did something like --from --to which will have 0 length after splitting
         if (fromToArgSets.length <= 1) {
-            System.out.println(msgPrefix + toArgErrorMsg);
+            System.out.println(msgPrefix + errorMsg);
             return;
         }
 
@@ -158,11 +161,11 @@ public class NotJippity {
 
         // If the arguments following --from or --to is empty
         if (fromDate.isEmpty()) {
-            System.out.println(msgPrefix + fromArgErrorMsg);
+            System.out.println(msgPrefix + errorMsg);
             return;
         }
         if (toDate.isEmpty()) {
-            System.out.println(msgPrefix + toArgErrorMsg);
+            System.out.println(msgPrefix + errorMsg);
             return;
         }
 
