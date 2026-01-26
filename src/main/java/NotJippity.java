@@ -1,3 +1,7 @@
+import exceptions.CmdFormatException;
+import exceptions.MissingArgException;
+import exceptions.NJException;
+import exceptions.UnknownCmdException;
 import tasks.Deadline;
 import tasks.Event;
 import tasks.Task;
@@ -35,56 +39,57 @@ public class NotJippity {
             String argString = input.trim().replaceFirst(command, "").trim();
 
             // Terminate if the user types "bye" in any case combination, otherwise just echoes
-            switch (command) {
-                case "todo":
-                    addToDo(argString);
-                    break;
-                case "deadline":
-                    addDeadline(argString);
-                    break;
-                case "event":
-                    addEvent(argString);
-                    break;
-                case "list":
-                    listTasks();
-                    break;
-                case "done": {
+            try {
+                switch (command) {
+                    case "todo":
+                        addToDo(argString);
+                        break;
+                    case "deadline":
+                        addDeadline(argString);
+                        break;
+                    case "event":
+                        addEvent(argString);
+                        break;
+                    case "list":
+                        listTasks();
+                        break;
+                    case "done": {
                         Task task = getTaskByArg(argString);
                         if (task != null) completeTask(task);
                     }
-                    break;
-                case "undo":{
+                        break;
+                    case "undo": {
                         Task task = getTaskByArg(argString);
                         if (task != null) undoTask(task);
                     }
-                    break;
-                case "toggle": {
+                        break;
+                    case "toggle": {
                         Task task = getTaskByArg(argString);
                         if (task != null) toggleTaskCompletion(task);
                     }
-                    break;
-                case "bye":
-                    isRunning = false;
-                    continue;
-                default:
-                    echoMsg(input);
+                        break;
+                    case "bye":
+                        isRunning = false;
+                        continue;
+                    // If none of the commands match
+                    default:
+                        throw new UnknownCmdException("Idk what's \"" + command + "\". Typo maybe?");
+                }
+            } catch (NJException exception) {
+                // Default printing out the error message, which should be provided in detail when thrown
+                System.out.println(msgPrefix + " " + exception.getMessage());
             }
         }
     }
 
     /**
      * Adds a ToDo task into the tasklist and executes feedback
-     * Executes error feedback if the task name is empty
      * @param argString User's input command arguments
+     * @throws MissingArgException If user input is missing any arguments"
      */
-    private static void addToDo(String argString) {
-        String errorMsg = " Uhhh pls follow this format am confused: \"todo <Name>\")";
-
+    private static void addToDo(String argString) throws MissingArgException {
         // If the task name is empty
-        if (argString.isEmpty()) {
-            System.out.println(msgPrefix + errorMsg);
-            return;
-        }
+        if (argString.isEmpty()) throw new MissingArgException("Sooo... what's this task called? (todo <Name>)");
 
         Task task = new ToDo(argString);
         tasklist.add(task);
@@ -92,33 +97,26 @@ public class NotJippity {
     }
 
     /**
-     * Adds a Deadline task into the tasklist and executes feedback.
-     * Executes error feedback if the task name is empty
-     * User input must follow the "deadline --by {@literal <}date{@literal >}" format, failing which an error feedback will be executed
+     * Adds a Deadline task into the tasklist and executes feedback
      * @param argString User's input command arguments
+     * @throws MissingArgException If user input is missing any arguments"
      */
-    private static void addDeadline(String argString) {
-        String errorMsg = " Uhhh pls follow this format am confused: \"deadline <Name> --by <date>\")";
+    private static void addDeadline(String argString) throws MissingArgException {
+        String formatStr = "Format: /deadline <Name> --by <Deadline>";
+        String argStringLow = argString.trim().toLowerCase();
 
-        String[] argSets = argString.split("--by");
-        // If the user didn't include --by or the name
-        if (argSets.length <= 1) {
-            System.out.println(msgPrefix + errorMsg);
-            return;
-        }
+        // If the user input something like "deadline" or "deadline --by [...]"
+        if (argStringLow.isEmpty() || argStringLow.startsWith("--by")) throw new MissingArgException("First things first, what's this task called? (" + formatStr + ")");
+
+        // If the user input doesn't contain "--by"
+        if (!argStringLow.contains("--by")) throw new MissingArgException("Np but tell me when it's to be done by (" + formatStr + ")");
+
+        String[] argSets = argString.trim().split("--by");
+        // If the user input doesn't specify the date after "--by"
+        if (argSets.length == 1) throw new MissingArgException("Didja forget to put something at the back of --by? (" + formatStr + ")");
 
         String taskName = argSets[0].trim(),
                byDate = argSets[1].trim();
-
-        // If the task name or the argument following --by is empty
-        if (taskName.isEmpty()) {
-            System.out.println(msgPrefix + errorMsg);
-            return;
-        }
-        if (byDate.isEmpty()) {
-            System.out.println(msgPrefix + errorMsg);
-            return;
-        }
 
         Task task = new Deadline(taskName, byDate);
         tasklist.add(task);
@@ -126,50 +124,33 @@ public class NotJippity {
     }
 
     /**
-     * Adds an Event task into the tasklist and executes feedback.
-     * Executes error feedback if the task name is empty
-     * User input must follow the "deadline --from {@literal <}date{@literal >} --to {@literal <}date{@literal >}" format, failing which an error feedback will be executed
+     * Adds an Event task into the tasklist and executes feedback
      * @param argString User's input command arguments
+     * @throws MissingArgException If user input is missing any arguments"
+     * @throws CmdFormatException If flags are in the wrong order
      */
-    private static void addEvent(String argString) {
-        String errorMsg = " Uhhh pls follow this format am confused: \"event <Name> --from <date> --to <date>\")";
+    private static void addEvent(String argString) throws MissingArgException, CmdFormatException {
+        String formatStr = "Format: /event <Name> --from <From> --to <To>";
+        String argStringLow = argString.trim().toLowerCase();
 
-        String[] argSets = argString.split("--from");
-        // If the user didn't include --from or something like event --from
-        if (argSets.length <= 1) {
-            System.out.println(msgPrefix + errorMsg);
-            return;
-        }
+        // If the user input something like "event", "event --from [...]" or "event --to [...]"
+        if (argStringLow.isEmpty() || argStringLow.startsWith("--from") || argStringLow.startsWith("--to")) throw new MissingArgException("First things first, what's this task called? (" + formatStr + ")");
 
-        String taskName = argSets[0].trim(),
-               backArgs = argSets[1].trim();
-        // If the task name is empty
-        if (taskName.isEmpty()) {
-            System.out.println(msgPrefix + errorMsg);
-            return;
-        }
+        // If the user input doesn't contain "--from" or "--to"
+        if (!argStringLow.contains("--from") || !argStringLow.contains("--to")) throw new MissingArgException("Np but tell me when it's to be done by (" + formatStr + ")");
 
-        String[] fromToArgSets = backArgs.split("--to");
-        // If the user didn't include --to, or if did something like --from --to which will have 0 length after splitting
-        if (fromToArgSets.length <= 1) {
-            System.out.println(msgPrefix + errorMsg);
-            return;
-        }
+        // If the user input has "--to" preceding "--from"
+        if (argStringLow.indexOf("--from") > argStringLow.indexOf("--to")) throw new CmdFormatException("Write --from before --to pls (" + formatStr + ")");
 
-        String fromDate = fromToArgSets[0].trim(),
-               toDate = fromToArgSets[1].trim();
+        String[] exclNameArgs = argString.trim().split("--from");
+        String taskName = exclNameArgs[0].trim(), exclFromArgs = exclNameArgs[1].trim();
+        String[] exclToArgs = exclFromArgs.split("--to");
+        String fromStr = exclToArgs[0].trim(), toStr = exclToArgs[1].trim();
 
         // If the arguments following --from or --to is empty
-        if (fromDate.isEmpty()) {
-            System.out.println(msgPrefix + errorMsg);
-            return;
-        }
-        if (toDate.isEmpty()) {
-            System.out.println(msgPrefix + errorMsg);
-            return;
-        }
+        if (fromStr.isEmpty() || toStr.isEmpty()) throw new MissingArgException("Didja forget to put something at the back of --from or --to? (" + formatStr + ")");
 
-        Task task = new Event(taskName, fromDate, toDate);
+        Task task = new Event(taskName, fromStr, toStr);
         tasklist.add(task);
         System.out.println(msgPrefix + " ++ " + task + " (" + tasklist.size() + " tasks)");
     }

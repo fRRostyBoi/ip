@@ -1,17 +1,17 @@
 ____________________________________________________________
 [NotJippity] What's up?
 
->> [NotJippity] randCmd
+>> [NotJippity] Idk what's "randcmd". Typo maybe?
 
 >> [NotJippity] Here's what we have so far:
 
->> [NotJippity] test
+>> [NotJippity] Idk what's "test". Typo maybe?
 
 >> [NotJippity] Here's what we have so far:
 
 >> [NotJippity] Here's what we have so far:
 
->> [NotJippity] Uhhh pls follow this format am confused: "todo <Name>")
+>> [NotJippity] Sooo... what's this task called? (todo <Name>)
 
 >> [NotJippity] ++ [ ][T] ToDo 1 (1 total)
 
@@ -21,13 +21,13 @@ ____________________________________________________________
              1. [ ][T] ToDo 1
              2. [ ][T] ToDo Plus Leading Space
 
->> [NotJippity] Uhhh pls follow this format am confused: "deadline <Name> --by <date>")
+>> [NotJippity] First things first, what's this task called? (Format: /deadline <Name> --by <Deadline>)
 
->> [NotJippity] Uhhh pls follow this format am confused: "deadline <Name> --by <date>")
+>> [NotJippity] First things first, what's this task called? (Format: /deadline <Name> --by <Deadline>)
 
->> [NotJippity] Uhhh pls follow this format am confused: "deadline <Name> --by <date>")
+>> [NotJippity] Didja forget to put something at the back of --by? (Format: /deadline <Name> --by <Deadline>)
 
->> [NotJippity] Uhhh pls follow this format am confused: "deadline <Name> --by <date>")
+>> [NotJippity] First things first, what's this task called? (Format: /deadline <Name> --by <Deadline>)
 
 >> [NotJippity] ++ [ ][D] New Deadline [This Date] (3 total)
 
@@ -36,31 +36,31 @@ ____________________________________________________________
              2. [ ][T] ToDo Plus Leading Space
              3. [ ][D] New Deadline [This Date]
 
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+>> [NotJippity] First things first, what's this task called? (Format: /event <Name> --from <From> --to <To>)
 
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+>> [NotJippity] First things first, what's this task called? (Format: /event <Name> --from <From> --to <To>)
 
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+>> [NotJippity] Np but tell me when it's to be done by (Format: /event <Name> --from <From> --to <To>)
 
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+>> [NotJippity] Np but tell me when it's to be done by (Format: /event <Name> --from <From> --to <To>)
 
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+>> [NotJippity] First things first, what's this task called? (Format: /event <Name> --from <From> --to <To>)
 
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+>> [NotJippity] First things first, what's this task called? (Format: /event <Name> --from <From> --to <To>)
 
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+>> [NotJippity] First things first, what's this task called? (Format: /event <Name> --from <From> --to <To>)
 
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+>> [NotJippity] Didja forget to put something at the back of --from or --to? (Format: /event <Name> --from <From> --to <To>)
 
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+>> [NotJippity] First things first, what's this task called? (Format: /event <Name> --from <From> --to <To>)
 
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+>> [NotJippity] Write --from before --to pls (Format: /event <Name> --from <From> --to <To>)
 
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+>> [NotJippity] First things first, what's this task called? (Format: /event <Name> --from <From> --to <To>)
 
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+>> [NotJippity] First things first, what's this task called? (Format: /event <Name> --from <From> --to <To>)
 
->> [NotJippity] Uhhh pls follow this format am confused: "event <Name> --from <date> --to <date>")
+>> [NotJippity] Write --from before --to pls (Format: /event <Name> --from <From> --to <To>)
 
 >> [NotJippity] ++ [ ][E] TestEvent [This Sat - Next Wed] (4 tasks)
 
@@ -79,7 +79,7 @@ ____________________________________________________________
              6. [ ][D] Spaced     Out   2 [Tomorrow]
              7. [ ][E] Spaced   Out   3 [This Day - That Day]
 
->> [NotJippity] byeeee
+>> [NotJippity] Idk what's "byeeee". Typo maybe?
 
 >> [NotJippity] Aite cool, cya.
 ____________________________________________________________
