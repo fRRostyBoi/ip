@@ -31,5 +31,27 @@ todo   Spaced     Out
 deadline    Spaced     Out   2   --by    Tomorrow
 event      Spaced   Out   3 --from    This Day    --to   That Day
 list
+undo 1
+list
+done 1
+list
+toggle 1
+list
+toggle 1
+list
+undo -1
+done 8
+done 7
+list
+delete 5
+delete 5
+delete 5
+delete 5
+list
+delete -1
+delete 0
+delete 1
+delete 1.1
+list
 byeeee
 bye

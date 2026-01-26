@@ -68,6 +68,11 @@ public class NotJippity {
                         if (task != null) toggleTaskCompletion(task);
                     }
                         break;
+                    case "delete": {
+                        Task task = getTaskByArg(argString);
+                        if (task != null) deleteTask(task);
+                    }
+                        break;
                     case "bye":
                         isRunning = false;
                         continue;
@@ -159,6 +164,11 @@ public class NotJippity {
      * Prints the list of all tasks currently stored
      */
     private static void listTasks() {
+        if (tasklist.isEmpty()) {
+            System.out.println(msgPrefix + " Nothing here yet man, wanna add some stuff? (todo, deadline, event)");
+            return;
+        }
+
         System.out.println(msgPrefix + " Here's what we have so far:");
 
         int maxDigits = 1 + (int) Math.floor(Math.log10(tasklist.size()));
@@ -190,10 +200,20 @@ public class NotJippity {
 
     /**
      * Toggles a task's completion status and executes feedback
+     * @param task The selected task
      */
     private static void toggleTaskCompletion(Task task) {
         task.toggleComplete();
         System.out.println(msgPrefix + " " + task);
+    }
+
+    /**
+     * Deletes a task
+     * @param task The selected task
+     */
+    private static void deleteTask(Task task) {
+        tasklist.remove(task);
+        System.out.println(msgPrefix + " -- " + task + " (" + tasklist.size() + " total)");
     }
 
     /**
@@ -230,9 +250,9 @@ public class NotJippity {
         try {
             return tasklist.get(Integer.parseInt(indexArg) - 1);
         } catch (NumberFormatException exception) {
-            System.out.println("Wrong format bro, enter the index of the task as seen in the \"list\" command");
+            System.out.println(msgPrefix + " Wrong format bro, enter the index of the task as seen in the \"list\" command");
         } catch (IndexOutOfBoundsException exception) {
-            System.out.println("Uhhhh wrong index mate, typo maybe?");
+            System.out.println(msgPrefix + " Uhhhh we don't have task #" + indexArg + ", maybe check with \"list\" again?");
         }
         return null;
     }
