@@ -2,39 +2,33 @@ import exceptions.CmdFormatException;
 import exceptions.MissingArgException;
 import exceptions.NJException;
 import exceptions.UnknownCmdException;
+import file.Ui;
 import tasks.Deadline;
 import tasks.Event;
 import tasks.Task;
 import tasks.ToDo;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class NotJippity {
-
-    private static final String msgPrefix = "[NotJippity]";
-    private static final String msgPrefixSpacer = msgPrefix.replaceAll("\\S", " ");
+    
+    private Ui ui;
     private static final ArrayList<Task> tasklist = new ArrayList<>();
-
+    
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        printStartupMsg();
-
-        doMainLoop(scanner);
-
-        printExitMsg();
+        NotJippity bot = new NotJippity();
+        bot.printStartupMsg();
+        bot.doMainLoop();
+        bot.printExitMsg();
     }
 
     /**
      * Activates the bot's main logic. Loops infinitely to handle inputs, terminating when the user types "bye"
-     * @param scanner Scanner for user inputs
      */
-    private static void doMainLoop(Scanner scanner) {
+    private void doMainLoop() {
         boolean isRunning = true;
         while (isRunning) {
-            System.out.print("\n>> ");
-            String input = scanner.nextLine();
+            String input = ui.getUserInput();
             String command = input.trim().split(" ")[0].toLowerCase();
             String argString = input.trim().replaceFirst(command, "").trim();
 
@@ -82,7 +76,7 @@ public class NotJippity {
                 }
             } catch (NJException exception) {
                 // Default printing out the error message, which should be provided in detail when thrown
-                System.out.println(msgPrefix + " " + exception.getMessage());
+                ui.send(exception.getMessage());
             }
         }
     }
@@ -92,13 +86,13 @@ public class NotJippity {
      * @param argString User's input command arguments
      * @throws MissingArgException If user input is missing any arguments"
      */
-    private static void addToDo(String argString) throws MissingArgException {
+    private void addToDo(String argString) throws MissingArgException {
         // If the task name is empty
         if (argString.isEmpty()) throw new MissingArgException("Sooo... what's this task called? (todo <Name>)");
 
         Task task = new ToDo(argString);
         tasklist.add(task);
-        System.out.println(msgPrefix + " ++ " + task + " (" + tasklist.size() + " total)");
+        ui.send("++ " + task + " (" + tasklist.size() + " total)");
     }
 
     /**
@@ -106,7 +100,7 @@ public class NotJippity {
      * @param argString User's input command arguments
      * @throws MissingArgException If user input is missing any arguments"
      */
-    private static void addDeadline(String argString) throws MissingArgException {
+    private void addDeadline(String argString) throws MissingArgException {
         String formatStr = "Format: /deadline <Name> --by <Deadline>";
         String argStringLow = argString.trim().toLowerCase();
 
@@ -125,7 +119,7 @@ public class NotJippity {
 
         Task task = new Deadline(taskName, byDate);
         tasklist.add(task);
-        System.out.println(msgPrefix + " ++ " + task + " (" + tasklist.size() + " total)");
+        ui.send("++ " + task + " (" + tasklist.size() + " total)");
     }
 
     /**
@@ -134,7 +128,7 @@ public class NotJippity {
      * @throws MissingArgException If user input is missing any arguments"
      * @throws CmdFormatException If flags are in the wrong order
      */
-    private static void addEvent(String argString) throws MissingArgException, CmdFormatException {
+    private void addEvent(String argString) throws MissingArgException, CmdFormatException {
         String formatStr = "Format: /event <Name> --from <From> --to <To>";
         String argStringLow = argString.trim().toLowerCase();
 
@@ -157,19 +151,19 @@ public class NotJippity {
 
         Task task = new Event(taskName, fromStr, toStr);
         tasklist.add(task);
-        System.out.println(msgPrefix + " ++ " + task + " (" + tasklist.size() + " tasks)");
+        ui.send("++ " + task + " (" + tasklist.size() + " tasks)");
     }
 
     /**
      * Prints the list of all tasks currently stored
      */
-    private static void listTasks() {
+    private void listTasks() {
         if (tasklist.isEmpty()) {
-            System.out.println(msgPrefix + " Nothing here yet man, wanna add some stuff? (todo, deadline, event)");
+            ui.send("Nothing here yet man, wanna add some stuff? (todo, deadline, event)");
             return;
         }
 
-        System.out.println(msgPrefix + " Here's what we have so far:");
+        ui.send("Here's what we have so far:");
 
         int maxDigits = 1 + (int) Math.floor(Math.log10(tasklist.size()));
 
@@ -178,66 +172,66 @@ public class NotJippity {
             int curDigits = 1 + (int) Math.floor(Math.log10(index));
             StringBuilder indexStr = new StringBuilder(index++ + ". ");
             for (int i = 0; i < maxDigits - curDigits; i++) indexStr.append(" ");
-            System.out.println(msgPrefixSpacer + " " + indexStr + task);
+            ui.sendWithSpacer(indexStr.toString() + task);
         }
     }
 
     /**
      * Completes a task and executes feedback
      */
-    private static void completeTask(Task task) {
+    private void completeTask(Task task) {
         task.complete();
-        System.out.println(msgPrefix + " " + task);
+        ui.send(task.toString());
     }
 
     /**
      * Undo a task and executes feedback
      */
-    private static void undoTask(Task task) {
+    private void undoTask(Task task) {
         task.undo();
-        System.out.println(msgPrefix + " " + task);
+        ui.send(task.toString());
     }
 
     /**
      * Toggles a task's completion status and executes feedback
      * @param task The selected task
      */
-    private static void toggleTaskCompletion(Task task) {
+    private void toggleTaskCompletion(Task task) {
         task.toggleComplete();
-        System.out.println(msgPrefix + " " + task);
+        ui.send(task.toString());
     }
 
     /**
      * Deletes a task
      * @param task The selected task
      */
-    private static void deleteTask(Task task) {
+    private void deleteTask(Task task) {
         tasklist.remove(task);
-        System.out.println(msgPrefix + " -- " + task + " (" + tasklist.size() + " total)");
+        ui.send("-- " + task + " (" + tasklist.size() + " total)");
     }
 
     /**
      * Prints the same message provided as argument
      * @param message Message to make the bot echo
      */
-    private static void echoMsg(String message) {
-        System.out.println(msgPrefix + " " + message);
+    private void echoMsg(String message) {
+        ui.send(message);
     }
 
     /**
      * Prints the startup message
      */
-    private static void printStartupMsg() {
-        System.out.println("____________________________________________________________");
-        System.out.println(msgPrefix + " What's up?");
+    private void printStartupMsg() {
+        ui.send("____________________________________________________________");
+        ui.sendWithSpacer("What's up?");
     }
 
     /**
      * Prints the shutdown message
      */
-    private static void printExitMsg() {
-        System.out.println(msgPrefix + " Aite cool, cya.");
-        System.out.println("____________________________________________________________");
+    private void printExitMsg() {
+        ui.send("Aite cool, cya.");
+        ui.sendWithSpacer("____________________________________________________________");
     }
 
     /**
@@ -246,13 +240,13 @@ public class NotJippity {
      * @param indexArg The user's full command arguments. It should contain only 1 positive integer within the tasklist's size, with index 1 corresponding to the first task
      * @return The task given by the provided index, or null if it doesn't exist
      */
-    private static Task getTaskByArg(String indexArg) {
+    private Task getTaskByArg(String indexArg) {
         try {
             return tasklist.get(Integer.parseInt(indexArg) - 1);
         } catch (NumberFormatException exception) {
-            System.out.println(msgPrefix + " Wrong format bro, enter the index of the task as seen in the \"list\" command");
+            ui.send("Wrong format bro, enter the index of the task as seen in the \"list\" command");
         } catch (IndexOutOfBoundsException exception) {
-            System.out.println(msgPrefix + " Uhhhh we don't have task #" + indexArg + ", maybe check with \"list\" again?");
+            ui.send("Uhhhh we don't have task #" + indexArg + ", maybe check with \"list\" again?");
         }
         return null;
     }
