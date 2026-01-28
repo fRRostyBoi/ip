@@ -2,20 +2,39 @@ package tasks;
 
 import exceptions.StorageException;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 public class Event extends Task {
 
-    private String fromDate, toDate;
+    public static final String DATE_FORMAT = "dd/MM/yyyy HHmm";
+    public static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
-    public Event(String name, String fromDate, String toDate) {
+    private LocalDateTime fromDateTime, toDateTime;
+
+    public Event(String name, LocalDateTime fromDateTime, LocalDateTime toDateTime) {
         super(name);
-        this.fromDate = fromDate;
-        this.toDate = toDate;
+        this.fromDateTime = fromDateTime;
+        this.toDateTime = toDateTime;
     }
 
-    private Event(String name, boolean completed, String fromDate, String toDate) {
+    private Event(String name, boolean completed, LocalDateTime fromDateTime, LocalDateTime toDateTime) {
         super(name, completed);
-        this.fromDate = fromDate;
-        this.toDate = toDate;
+        this.fromDateTime = fromDateTime;
+        this.toDateTime = toDateTime;
+    }
+
+    /**
+     * Checks if any date in the event date range matches the given date
+     * @return True if any date in the date range matches
+     */
+    public boolean hasDate(LocalDate date) {
+        ChronoLocalDate fromDate = ChronoLocalDate.from(fromDateTime),
+                toDate = ChronoLocalDate.from(toDateTime);
+        return date.isEqual(fromDate) || date.isEqual(toDate) || (date.isAfter(fromDate) && date.isBefore(toDate));
     }
 
     @Override
@@ -25,13 +44,15 @@ public class Event extends Task {
 
     @Override
     public String getDataString() {
-        return getTypeIcon() + DATA_SEPARATOR + name + DATA_SEPARATOR + (completed ? "Y" : "N")
-                       + DATA_SEPARATOR + fromDate + DATA_SEPARATOR + toDate;
+        return getTypeIcon() + DATA_SEPARATOR + name + DATA_SEPARATOR + (completed ? "Y" : "N") + DATA_SEPARATOR
+                + fromDateTime.format(DATETIME_FORMATTER) + DATA_SEPARATOR
+                + toDateTime.format(DATETIME_FORMATTER);
     }
 
     @Override
     public String toString() {
-        return super.toString() + " [" + fromDate + " - " + toDate + "]";
+        return super.toString() + " [" + fromDateTime.format(DATETIME_FORMATTER)
+                + " - " + toDateTime.format(DATETIME_FORMATTER) + "]";
     }
 
     /**
@@ -58,16 +79,30 @@ public class Event extends Task {
             throw new StorageException("Invalid argument #3; expected Y/N but found " + statusStr);
         }
 
-        String fromDateStr = dataParts[3],
-               toDateStr = dataParts[4];
-        if (fromDateStr.isEmpty()) {
+        String fromStr = dataParts[3],
+                toStr = dataParts[4];
+        LocalDateTime fromDate, toDate;
+
+        if (fromStr.isEmpty()) {
             throw new StorageException("Invalid argument #4; expected FromDate but found empty string");
         }
-        if (toDateStr.isEmpty()) {
+        if (toStr.isEmpty()) {
             throw new StorageException("Invalid argument #5; expected ToDate but found empty string");
         }
+        try {
+            fromDate = LocalDateTime.parse(fromStr, DATETIME_FORMATTER);
+        } catch (DateTimeParseException exception) {
+            throw new StorageException("Invalid argument #4; expected format " + DATE_FORMAT
+                    + " but found " + fromStr);
+        }
+        try {
+            toDate = LocalDateTime.parse(toStr, DATETIME_FORMATTER);
+        } catch (DateTimeParseException exception) {
+            throw new StorageException("Invalid argument #5; expected format " + DATE_FORMAT
+                    + " but found " + fromStr);
+        }
 
-        return new Event(name, status, fromDateStr, toDateStr);
+        return new Event(name, status, fromDate, toDate);
     }
 
 }

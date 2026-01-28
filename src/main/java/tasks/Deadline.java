@@ -2,18 +2,35 @@ package tasks;
 
 import exceptions.StorageException;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 public class Deadline extends Task {
 
-    private String byDate;
+    public static final String DATE_FORMAT = "dd/MM/yyyy HHmm";
+    public static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
-    public Deadline(String name, String byDate) {
+    private LocalDateTime byDateTime;
+
+    public Deadline(String name, LocalDateTime byDateTime) {
         super(name);
-        this.byDate = byDate;
+        this.byDateTime = byDateTime;
     }
 
-    private Deadline(String name, boolean completed, String byDate) {
+    private Deadline(String name, boolean completed, LocalDateTime byDateTime) {
         super(name, completed);
-        this.byDate = byDate;
+        this.byDateTime = byDateTime;
+    }
+
+    /**
+     * Checks if the deadline ByDate matches the given date
+     * @return True if the deadline matches
+     */
+    public boolean hasDate(LocalDate date) {
+        return date.isEqual(ChronoLocalDate.from(byDateTime));
     }
 
     @Override
@@ -23,12 +40,13 @@ public class Deadline extends Task {
 
     @Override
     public String getDataString() {
-        return getTypeIcon() + DATA_SEPARATOR + name + DATA_SEPARATOR + (completed ? "Y" : "N") + DATA_SEPARATOR + byDate;
+        return getTypeIcon() + DATA_SEPARATOR + name + DATA_SEPARATOR + (completed ? "Y" : "N") + DATA_SEPARATOR
+                + byDateTime.format(DATETIME_FORMATTER);
     }
 
     @Override
     public String toString() {
-        return super.toString() + " [" + byDate + "]";
+        return super.toString() + " [" + byDateTime.format(DATETIME_FORMATTER) + "]";
     }
 
     /**
@@ -56,11 +74,18 @@ public class Deadline extends Task {
         }
 
         String byDateStr = dataParts[3];
+        LocalDateTime byDate;
         if (byDateStr.isEmpty()) {
             throw new StorageException("Invalid argument #4; expected ByDate but found empty string");
         }
+        try {
+            byDate = LocalDateTime.parse(byDateStr, DATETIME_FORMATTER);
+        } catch (DateTimeParseException exception) {
+            throw new StorageException("Invalid argument #4; expected format " + DATE_FORMAT
+                    + " but found " + byDateStr);
+        }
 
-        return new Deadline(name, status, byDateStr);
+        return new Deadline(name, status, byDate);
     }
 
 }
