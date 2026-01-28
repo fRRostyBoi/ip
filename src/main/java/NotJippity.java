@@ -1,7 +1,5 @@
-import exceptions.CmdFormatException;
-import exceptions.MissingArgException;
-import exceptions.NJException;
-import exceptions.UnknownCmdException;
+import exceptions.*;
+import file.Storage;
 import file.Ui;
 import tasks.Deadline;
 import tasks.Event;
@@ -13,13 +11,48 @@ import java.util.ArrayList;
 public class NotJippity {
     
     private Ui ui;
+    private Storage storage;
     private static final ArrayList<Task> tasklist = new ArrayList<>();
-    
+
     public static void main(String[] args) {
         NotJippity bot = new NotJippity();
-        bot.printStartupMsg();
+        bot.init();
         bot.doMainLoop();
-        bot.printExitMsg();
+        bot.shutdown();
+    }
+
+    /**
+     * Performs the bot's startup sequence, sending the welcome message when done.
+     * This method must be called at the start of the program, before any methods.
+     * If any initialisation error occurs, the bot will terminate immediately.
+     */
+    private void init() {
+        ui = new Ui();
+        storage = new Storage(ui);
+        storage.init();
+
+        try {
+            tasklist.addAll(storage.loadData());
+        } catch (StorageException exception) {
+            ui.send(exception.getMessage());
+            System.exit(1);
+        }
+
+        printStartupMsg();
+    }
+
+    /**
+     * Performs the bot's shutdown sequence, sending the exit message when done.
+     * This method must be called at the end of the program, after all methods.
+     */
+    private void shutdown() {
+        try {
+            storage.saveData(tasklist);
+        } catch (StorageException exception) {
+            ui.send(exception.getMessage());
+        }
+
+        printExitMsg();
     }
 
     /**

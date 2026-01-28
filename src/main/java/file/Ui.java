@@ -18,7 +18,7 @@ public class Ui {
      * @return User's input as a string
      */
     public String getUserInput() {
-        System.out.println(CLI_INPUT_PREFIX);
+        System.out.print(CLI_INPUT_PREFIX);
         return cliInput.nextLine();
     }
 
