@@ -1,4 +1,4 @@
-package exceptions;
+package notjippity.exceptions;
 
 /**
  * Represents an abstract NotJippity exception

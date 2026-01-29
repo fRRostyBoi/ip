@@ -1,0 +1,45 @@
+package notjippity.commands;
+
+import notjippity.tasks.TaskTracker;
+import notjippity.io.Ui;
+import notjippity.exceptions.MissingArgException;
+import notjippity.tasks.Task;
+import notjippity.tasks.ToDo;
+
+/**
+ * Handles "ToDo" command logic and behaviour
+ */
+public class ToDoCmd extends Command {
+
+    private static final String FORMAT_STR = "Format: todo <Name>";
+
+    private Ui ui;
+    private TaskTracker taskTracker;
+
+    /**
+     * Returns a new instance of ToDoCmd
+     */
+    public ToDoCmd(Ui ui, TaskTracker taskTracker) {
+        super("todo");
+        this.ui = ui;
+        this.taskTracker = taskTracker;
+    }
+
+    /**
+     * Adds a ToDo task into the tasklist and executes feedback
+     * @param argStr User's input command arguments
+     * @throws MissingArgException If user input is missing any arguments"
+     */
+    @Override
+    public void execute(String cmdStr, String argStr) throws MissingArgException {
+        // If the task name is empty
+        if (argStr == null) {
+            throw new MissingArgException("Sooo... what's this task called? (" + FORMAT_STR + ")");
+        }
+
+        Task task = new ToDo(argStr);
+        taskTracker.addTask(task);
+        ui.send("++ " + task + " (" + taskTracker.getSize() + " total)");
+    }
+
+}

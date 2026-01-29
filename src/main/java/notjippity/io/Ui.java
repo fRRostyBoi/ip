@@ -1,4 +1,4 @@
-package file;
+package notjippity.io;
 
 import java.util.Scanner;
 
