@@ -1,6 +1,6 @@
-package tasks;
+package notjippity.tasks;
 
-import exceptions.StorageException;
+import notjippity.exceptions.StorageException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,8 +10,8 @@ import java.time.format.DateTimeParseException;
 
 public class Event extends Task {
 
-    public static final String DATE_FORMAT = "dd/MM/yyyy HHmm";
-    public static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
+    public static final String FORMAT_DATE = "dd/MM/yyyy HHmm";
+    public static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern(FORMAT_DATE);
 
     private LocalDateTime fromDateTime, toDateTime;
 
@@ -92,13 +92,13 @@ public class Event extends Task {
         try {
             fromDate = LocalDateTime.parse(fromStr, DATETIME_FORMATTER);
         } catch (DateTimeParseException exception) {
-            throw new StorageException("Invalid argument #4; expected format " + DATE_FORMAT
+            throw new StorageException("Invalid argument #4; expected format " + FORMAT_DATE
                     + " but found " + fromStr);
         }
         try {
             toDate = LocalDateTime.parse(toStr, DATETIME_FORMATTER);
         } catch (DateTimeParseException exception) {
-            throw new StorageException("Invalid argument #5; expected format " + DATE_FORMAT
+            throw new StorageException("Invalid argument #5; expected format " + FORMAT_DATE
                     + " but found " + fromStr);
         }
 

@@ -1,4 +1,4 @@
-package exceptions;
+package notjippity.exceptions;
 
 /**
  * Represents an error when user inputs a command in the wrong format

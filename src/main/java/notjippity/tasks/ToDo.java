@@ -1,6 +1,6 @@
-package tasks;
+package notjippity.tasks;
 
-import exceptions.StorageException;
+import notjippity.exceptions.StorageException;
 
 public class ToDo extends Task {
 

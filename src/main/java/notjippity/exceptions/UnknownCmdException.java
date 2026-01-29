@@ -1,4 +1,4 @@
-package exceptions;
+package notjippity.exceptions;
 
 /**
  * Represents an error when user inputs an unknown command
