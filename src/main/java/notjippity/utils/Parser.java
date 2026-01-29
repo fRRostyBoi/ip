@@ -11,6 +11,9 @@ public class Parser {
      * @return The command, or null if an empty input is provided
      */
     public static String getCommand(String input) {
+        if (input == null) {
+            return null;
+        }
         input = input.trim();
         if (input.isEmpty()) {
             return null;
@@ -24,6 +27,9 @@ public class Parser {
      * @return The string of arguments, or null if an empty string of arguments was provided
      */
     public static String getArgString(String input) {
+        if (input == null) {
+            return null;
+        }
         input = input.trim();
         if (input.isEmpty()) {
             return null;

@@ -11,7 +11,7 @@ import notjippity.tasks.ToDo;
  */
 public class ToDoCmd extends Command {
 
-    private static final String FORMAT_STR = "Format: todo <Name>";
+    static final String FORMAT_CMD = "Format: todo <Name>";
 
     private Ui ui;
     private TaskTracker taskTracker;
@@ -33,8 +33,8 @@ public class ToDoCmd extends Command {
     @Override
     public void execute(String cmdStr, String argStr) throws MissingArgException {
         // If the task name is empty
-        if (argStr == null) {
-            throw new MissingArgException("Sooo... what's this task called? (" + FORMAT_STR + ")");
+        if (argStr == null || argStr.trim().isEmpty()) {
+            throw new MissingArgException("Sooo... what's this task called? (" + FORMAT_CMD + ")");
         }
 
         Task task = new ToDo(argStr);
