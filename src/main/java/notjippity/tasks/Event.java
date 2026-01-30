@@ -35,12 +35,12 @@ public class Event extends Task {
      * Returns a new Event instance
      *
      * @param name The task name
-     * @param completed Whether the task has been completed
+     * @param isCompleted Whether the task has been completed
      * @param fromDateTime The DateTime from which this event starts
      * @param toDateTime The DateTime from which this event ends
      */
-    private Event(String name, boolean completed, LocalDateTime fromDateTime, LocalDateTime toDateTime) {
-        super(name, completed);
+    private Event(String name, boolean isCompleted, LocalDateTime fromDateTime, LocalDateTime toDateTime) {
+        super(name, isCompleted);
         this.fromDateTime = fromDateTime;
         this.toDateTime = toDateTime;
     }

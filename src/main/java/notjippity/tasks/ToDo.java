@@ -20,10 +20,10 @@ public class ToDo extends Task {
      * Returns a new ToDo instance
      *
      * @param name The task name
-     * @param completed Whether the task has been completed
+     * @param isCompleted Whether the task has been completed
      */
-    private ToDo(String name, boolean completed) {
-        super(name, completed);
+    private ToDo(String name, boolean isCompleted) {
+        super(name, isCompleted);
     }
 
     @Override

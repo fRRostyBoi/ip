@@ -33,11 +33,11 @@ public class Deadline extends Task {
      * Returns a new Deadline instance
      *
      * @param name The task name
-     * @param completed Whether the task has been completed
+     * @param isCompleted Whether the task has been completed
      * @param byDateTime The deadline for this task
      */
-    private Deadline(String name, boolean completed, LocalDateTime byDateTime) {
-        super(name, completed);
+    private Deadline(String name, boolean isCompleted, LocalDateTime byDateTime) {
+        super(name, isCompleted);
         this.byDateTime = byDateTime;
     }
 
