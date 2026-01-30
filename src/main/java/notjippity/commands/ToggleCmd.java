@@ -18,7 +18,10 @@ public class ToggleCmd extends Command {
     private TaskTracker taskTracker;
 
     /**
-     * Returns a new instance of ToggleCmd
+     * Returns a new ToggleCmd instance
+     *
+     * @param ui The bot's UI
+     * @param taskTracker The bot's task tracker
      */
     public ToggleCmd(Ui ui, TaskTracker taskTracker) {
         super("toggle");
@@ -27,8 +30,9 @@ public class ToggleCmd extends Command {
     }
 
     /**
-     * Toggles a task's completion status with the task index
-     * provided in argStr (follows the index numbering of list command)
+     * Toggles a task's completion status with the task index provided in argStr
+     * (follows the index numbering of list command)
+     *
      * @param cmdStr The command string
      * @param argStr The string of arguments
      * @throws CmdFormatException If the command is of an invalid format

@@ -17,7 +17,10 @@ public class ToDoCmd extends Command {
     private TaskTracker taskTracker;
 
     /**
-     * Returns a new instance of ToDoCmd
+     * Returns a new ToDoCmd instance
+     *
+     * @param ui The bot's UI
+     * @param taskTracker The bot's task tracker
      */
     public ToDoCmd(Ui ui, TaskTracker taskTracker) {
         super("todo");
@@ -27,6 +30,7 @@ public class ToDoCmd extends Command {
 
     /**
      * Adds a ToDo task into the tasklist and executes feedback
+     *
      * @param argStr User's input command arguments
      * @throws MissingArgException If user input is missing any arguments"
      */

@@ -21,7 +21,10 @@ public class DeadlineCmd extends Command {
     private TaskTracker taskTracker;
 
     /**
-     * Returns a new instance of DeadlineCmd
+     * Returns a new DeadlineCmd instance
+     *
+     * @param ui The bot's UI
+     * @param taskTracker The bot's task tracker
      */
     public DeadlineCmd(Ui ui, TaskTracker taskTracker) {
         super("deadline");

@@ -26,7 +26,10 @@ public class ListCmd extends Command {
     private TaskTracker taskTracker;
 
     /**
-     * Returns a new instance of ListCmd
+     * Returns a new ListCmd instance
+     *
+     * @param ui The bot's UI
+     * @param taskTracker The bot's task tracker
      */
     public ListCmd(Ui ui, TaskTracker taskTracker) {
         super("list");
@@ -37,6 +40,7 @@ public class ListCmd extends Command {
     /**
      * Prints the list of all tasks currently stored, or only those occurring
      * on a specific date if the --date flag is included
+     *
      * @param cmdStr The command string
      * @param argStr The string of arguments
      * @throws CmdFormatException If the user input has an invalid format

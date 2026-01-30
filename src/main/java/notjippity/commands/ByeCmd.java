@@ -12,6 +12,7 @@ public class ByeCmd extends Command {
 
     /**
      * Returns a new instance of ByeCmd
+     *
      * @param notJippity The NotJippity instance
      */
     public ByeCmd(NotJippity notJippity) {
@@ -21,6 +22,7 @@ public class ByeCmd extends Command {
 
     /**
      * Triggers the shutdown sequence of the bot
+     *
      * @param cmdStr The command string
      * @param argStr The string of arguments
      */

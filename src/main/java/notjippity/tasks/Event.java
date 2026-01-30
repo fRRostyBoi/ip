@@ -8,6 +8,9 @@ import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Represents an Event task
+ */
 public class Event extends Task {
 
     public static final String FORMAT_DATE = "dd/MM/yyyy HHmm";
@@ -15,12 +18,27 @@ public class Event extends Task {
 
     private LocalDateTime fromDateTime, toDateTime;
 
+    /**
+     * Returns a new Event instance
+     *
+     * @param name The task name
+     * @param fromDateTime The DateTime from which this event starts
+     * @param toDateTime The DateTime from which this event ends
+     */
     public Event(String name, LocalDateTime fromDateTime, LocalDateTime toDateTime) {
         super(name);
         this.fromDateTime = fromDateTime;
         this.toDateTime = toDateTime;
     }
 
+    /**
+     * Returns a new Event instance
+     *
+     * @param name The task name
+     * @param completed Whether the task has been completed
+     * @param fromDateTime The DateTime from which this event starts
+     * @param toDateTime The DateTime from which this event ends
+     */
     private Event(String name, boolean completed, LocalDateTime fromDateTime, LocalDateTime toDateTime) {
         super(name, completed);
         this.fromDateTime = fromDateTime;
@@ -28,7 +46,8 @@ public class Event extends Task {
     }
 
     /**
-     * Checks if any date in the event date range matches the given date
+     * Checks if the given date falls between the event date range (both inclusive)
+     *
      * @return True if any date in the date range matches
      */
     public boolean hasDate(LocalDate date) {
@@ -56,10 +75,11 @@ public class Event extends Task {
     }
 
     /**
-     * Converts data part strings into a Event task
+     * Constructs an Event instance from data part strings
+     *
      * @param dataParts The data parts from Task.createTaskFromString
-     * @return The Event Task
-     * @throws StorageException If any data part is of an invalid format
+     * @return The Event instance
+     * @throws StorageException If any data part has an invalid format
      */
     public static Event createTaskFromDataParts(String[] dataParts) throws StorageException {
         if (dataParts.length < 5) {

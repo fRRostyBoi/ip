@@ -6,7 +6,8 @@ package notjippity.utils;
 public class Parser {
 
     /**
-     * Returns only the command of the user input
+     * Returns only the command portion of the user input
+     *
      * @param input The full user input
      * @return The command, or null if an empty input is provided
      */
@@ -22,9 +23,10 @@ public class Parser {
     }
 
     /**
-     * Returns only the string of argument of the user input
+     * Returns only the argument string potion of the user input
+     *
      * @param input The full user input
-     * @return The string of arguments, or null if an empty string of arguments was provided
+     * @return The string of arguments, or null if an empty string of arguments is provided
      */
     public static String getArgString(String input) {
         if (input == null) {
