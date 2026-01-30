@@ -1,8 +1,5 @@
 package notjippity.io;
 
-import notjippity.exceptions.StorageException;
-import notjippity.tasks.Task;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -10,6 +7,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import notjippity.exceptions.StorageException;
+import notjippity.tasks.Task;
 
 /**
  * Represents the bot's persistent data storage system

@@ -7,15 +7,15 @@ import notjippity.exceptions.NJException;
  */
 public abstract class Command {
 
-    protected String name;
+    protected String cmdName;
 
     /**
      * Returns a new Command instance
      *
-     * @param name The string to trigger this command
+     * @param cmdName The string to trigger this command
      */
-    protected Command(String name) {
-        this.name = name;
+    protected Command(String cmdName) {
+        this.cmdName = cmdName;
     }
 
     /**
@@ -32,8 +32,8 @@ public abstract class Command {
      *
      * @return The command name
      */
-    public String getName() {
-        return this.name;
+    public String getCmdName() {
+        return this.cmdName;
     }
 
 }

@@ -11,7 +11,7 @@ public abstract class Task {
     protected static final String DATA_SPLITTER = "\\|\\|";
 
     protected String name;
-    protected boolean completed;
+    protected boolean isCompleted;
 
     /**
      * Returns a new Task instance
@@ -26,11 +26,11 @@ public abstract class Task {
      * Returns a new Task instance
      *
      * @param name The task name
-     * @param completed Whether the task has been completed
+     * @param isCompleted Whether the task has been completed
      */
-    protected Task(String name, boolean completed) {
+    protected Task(String name, boolean isCompleted) {
         this.name = name;
-        this.completed = completed;
+        this.isCompleted = isCompleted;
     }
 
     /**
@@ -67,28 +67,28 @@ public abstract class Task {
      * @return Whether the Task is completed
      */
     public boolean isCompleted() {
-        return completed;
+        return isCompleted;
     }
 
     /**
      * Toggles the Task's completed status
      */
     public void toggleComplete() {
-        completed = !completed;
+        isCompleted = !isCompleted;
     }
 
     /**
      * Sets the Task as completed
      */
     public void complete() {
-        completed = true;
+        isCompleted = true;
     }
 
     /**
      * Sets the Task as incomplete
      */
     public void undo() {
-        completed = false;
+        isCompleted = false;
     }
 
     /**

@@ -1,12 +1,12 @@
 package notjippity.tasks;
 
-import notjippity.exceptions.StorageException;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+
+import notjippity.exceptions.StorageException;
 
 /**
  * Represents a Deadline task
@@ -57,7 +57,7 @@ public class Deadline extends Task {
 
     @Override
     public String getDataString() {
-        return getTypeIcon() + DATA_SEPARATOR + name + DATA_SEPARATOR + (completed ? "Y" : "N") + DATA_SEPARATOR
+        return getTypeIcon() + DATA_SEPARATOR + name + DATA_SEPARATOR + (isCompleted ? "Y" : "N") + DATA_SEPARATOR
                 + byDateTime.format(DATETIME_FORMATTER);
     }
 
@@ -84,9 +84,9 @@ public class Deadline extends Task {
             throw new StorageException("Invalid argument #1; expected Task name but found empty string");
         }
 
-        boolean status = false;
+        boolean isCompleted = false;
         if (statusStr.equals("Y")) {
-            status = true;
+            isCompleted = true;
         } else if (!statusStr.equals("N")) {
             throw new StorageException("Invalid argument #3; expected Y/N but found " + statusStr);
         }
@@ -103,7 +103,7 @@ public class Deadline extends Task {
                     + " but found " + byDateStr);
         }
 
-        return new Deadline(name, status, byDate);
+        return new Deadline(name, isCompleted, byDate);
     }
 
 }

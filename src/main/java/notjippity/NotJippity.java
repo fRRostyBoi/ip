@@ -1,5 +1,8 @@
 package notjippity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import notjippity.commands.ByeCmd;
 import notjippity.commands.Command;
 import notjippity.commands.DeadlineCmd;
@@ -10,17 +13,14 @@ import notjippity.commands.ListCmd;
 import notjippity.commands.ToDoCmd;
 import notjippity.commands.ToggleCmd;
 import notjippity.commands.UndoCmd;
-import notjippity.utils.Parser;
-import notjippity.io.Storage;
-import notjippity.tasks.TaskTracker;
-import notjippity.io.Ui;
 import notjippity.exceptions.FatalNJException;
 import notjippity.exceptions.NJException;
 import notjippity.exceptions.StorageException;
+import notjippity.io.Storage;
+import notjippity.io.Ui;
 import notjippity.tasks.Task;
-
-import java.util.ArrayList;
-import java.util.List;
+import notjippity.tasks.TaskTracker;
+import notjippity.utils.Parser;
 
 /**
  * Represents the NotJippity bot and handles all overarching interactions
@@ -106,7 +106,7 @@ public class NotJippity {
             // Try to match the given command
             boolean match = false;
             for (Command command : commands) {
-                if (command.getName().equalsIgnoreCase(cmdString)) {
+                if (command.getCmdName().equalsIgnoreCase(cmdString)) {
                     match = true;
                     try {
                         command.execute(cmdString, argString);

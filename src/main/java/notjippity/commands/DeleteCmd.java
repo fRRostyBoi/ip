@@ -1,18 +1,18 @@
 package notjippity.commands;
 
-import notjippity.tasks.TaskTracker;
-import notjippity.io.Ui;
 import notjippity.exceptions.CmdFormatException;
 import notjippity.exceptions.InvalidArgException;
 import notjippity.exceptions.MissingArgException;
+import notjippity.io.Ui;
 import notjippity.tasks.Task;
+import notjippity.tasks.TaskTracker;
 
 /**
  * Handles "delete" command logic and behaviour
  */
 public class DeleteCmd extends Command {
 
-    private static final String FORMAT_STR = "Format: delete <Task Id>";
+    private static final String FORMAT_CMD = "Format: delete <Task Id>";
 
     private Ui ui;
     private TaskTracker taskTracker;
@@ -42,7 +42,7 @@ public class DeleteCmd extends Command {
     @Override
     public void execute(String cmdStr, String argStr) throws CmdFormatException, MissingArgException, InvalidArgException {
         if (argStr == null) {
-            throw new MissingArgException("Which one? (" + FORMAT_STR + ")");
+            throw new MissingArgException("Which one? (" + FORMAT_CMD + ")");
         }
 
         Task task;

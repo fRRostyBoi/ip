@@ -33,7 +33,7 @@ public class ToDo extends Task {
 
     @Override
     public String getDataString() {
-        return getTypeIcon() + DATA_SEPARATOR + name + DATA_SEPARATOR + (completed ? "Y" : "N");
+        return getTypeIcon() + DATA_SEPARATOR + name + DATA_SEPARATOR + (isCompleted ? "Y" : "N");
     }
 
     /**
@@ -49,19 +49,19 @@ public class ToDo extends Task {
         }
 
         String name = dataParts[1],
-               statusStr = dataParts[2];
+                statusStr = dataParts[2];
         if (name.isEmpty()) {
             throw new StorageException("Invalid argument #1; expected Task name but found empty string");
         }
 
-        boolean status = false;
+        boolean isCompleted = false;
         if (statusStr.equals("Y")) {
-            status = true;
+            isCompleted = true;
         } else if (!statusStr.equals("N")) {
             throw new StorageException("Invalid argument #3; expected Y/N but found " + statusStr);
         }
 
-        return new ToDo(name, status);
+        return new ToDo(name, isCompleted);
     }
 
 }
