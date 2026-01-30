@@ -6,6 +6,7 @@ import notjippity.commands.DeadlineCmd;
 import notjippity.commands.DeleteCmd;
 import notjippity.commands.DoneCmd;
 import notjippity.commands.EventCmd;
+import notjippity.commands.FindCmd;
 import notjippity.commands.ListCmd;
 import notjippity.commands.ToDoCmd;
 import notjippity.commands.ToggleCmd;
@@ -63,6 +64,7 @@ public class NotJippity {
         commands.add(new DeadlineCmd(ui, taskTracker));
         commands.add(new EventCmd(ui, taskTracker));
         commands.add(new ListCmd(ui, taskTracker));
+        commands.add(new FindCmd(ui, taskTracker));
         commands.add(new ToggleCmd(ui, taskTracker));
         commands.add(new DoneCmd(ui, taskTracker));
         commands.add(new UndoCmd(ui, taskTracker));

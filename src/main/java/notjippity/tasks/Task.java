@@ -53,6 +53,15 @@ public abstract class Task {
     }
 
     /**
+     * Checks if the Task name contains the given keyword. Ignores case sensitivity.
+     *
+     * @return True if the Task name contains the keyword
+     */
+    public boolean matchesKeyword(String keyword) {
+        return name.toLowerCase().contains(keyword.toLowerCase());
+    }
+
+    /**
      * Parses a data string and returns the respective Task object according to its type
      * @param dataStr The data string
      * @return The Task object
