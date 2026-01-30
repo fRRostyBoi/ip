@@ -1,8 +1,5 @@
 package notjippity.io;
 
-import notjippity.exceptions.StorageException;
-import notjippity.tasks.Task;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -10,6 +7,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import notjippity.exceptions.StorageException;
+import notjippity.tasks.Task;
 
 /**
  * Provides functions to maintain bot persistent data (i.e. loading/saving data to/from file
@@ -37,7 +37,8 @@ public class Storage {
         try {
             loadFile();
             fileReader = new Scanner(file);
-        } catch (StorageException | FileNotFoundException exception) {
+        } catch (StorageException
+                 | FileNotFoundException exception) {
             ui.sendRaw(exception.getMessage());
             System.exit(1);
         }

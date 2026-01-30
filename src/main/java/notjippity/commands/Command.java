@@ -7,15 +7,15 @@ import notjippity.exceptions.NJException;
  */
 public abstract class Command {
 
-    protected String name;
+    protected String cmdName;
 
     /**
      * Instantiates and returns a new Command instance. Must only be
      * called by Command subtypes through super()
-     * @param name The string to trigger this command
+     * @param cmdName The string to trigger this command
      */
-    protected Command(String name) {
-        this.name = name;
+    protected Command(String cmdName) {
+        this.cmdName = cmdName;
     }
 
     /**
@@ -26,8 +26,8 @@ public abstract class Command {
      */
     public abstract void execute(String cmdStr, String argStr) throws NJException;
 
-    public String getName() {
-        return this.name;
+    public String getCmdName() {
+        return this.cmdName;
     }
 
 }

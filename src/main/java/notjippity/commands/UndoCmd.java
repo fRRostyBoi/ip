@@ -1,18 +1,19 @@
 package notjippity.commands;
 
-import notjippity.tasks.TaskTracker;
-import notjippity.io.Ui;
 import notjippity.exceptions.CmdFormatException;
 import notjippity.exceptions.InvalidArgException;
 import notjippity.exceptions.MissingArgException;
+import notjippity.io.Ui;
 import notjippity.tasks.Task;
+import notjippity.tasks.TaskTracker;
 
 /**
  * Handles "undo" command logic and behaviour
  */
 public class UndoCmd extends Command {
 
-    private final String FORMAT_CMD = "Format: undo <Task Id>";
+    private static final String FORMAT_CMD = "Format: undo <Task Id>";
+
     private Ui ui;
     private TaskTracker taskTracker;
 

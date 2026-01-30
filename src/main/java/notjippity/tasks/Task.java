@@ -8,15 +8,15 @@ public abstract class Task {
     protected static final String DATA_SPLITTER = "\\|\\|";
 
     protected String name;
-    protected boolean completed;
+    protected boolean isCompleted;
 
     protected Task(String name) {
         this.name = name;
     }
 
-    protected Task(String name, boolean completed) {
+    protected Task(String name, boolean isCompleted) {
         this.name = name;
-        this.completed = completed;
+        this.isCompleted = isCompleted;
     }
 
     public abstract String getTypeIcon();
@@ -37,19 +37,19 @@ public abstract class Task {
     }
 
     public boolean isCompleted() {
-        return completed;
+        return isCompleted;
     }
 
     public void toggleComplete() {
-        completed = !completed;
+        isCompleted = !isCompleted;
     }
 
     public void complete() {
-        completed = true;
+        isCompleted = true;
     }
 
     public void undo() {
-        completed = false;
+        isCompleted = false;
     }
 
     /**
