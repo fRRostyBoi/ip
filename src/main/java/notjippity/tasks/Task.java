@@ -92,6 +92,15 @@ public abstract class Task {
     }
 
     /**
+     * Checks if the Task name contains the given keyword. Ignores case sensitivity.
+     *
+     * @return True if the Task name contains the keyword
+     */
+    public boolean matchesKeyword(String keyword) {
+        return name.toLowerCase().contains(keyword.toLowerCase());
+    }
+
+    /**
      * Returns the respective Task object according to its type given the data string.
      * Each Task's data string must match the format returned from its getDataString() method
      *

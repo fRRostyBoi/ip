@@ -19,7 +19,7 @@ import notjippity.tasks.TaskTracker;
 public class ListCmd extends Command {
 
     private static final String FORMAT_DATE = "dd/MM/yyyy";
-    private static final String FORMAT_CMD = "Format: /list [--date <" + FORMAT_DATE + ">]";
+    private static final String FORMAT_CMD = "Format: list [--date <" + FORMAT_DATE + ">]";
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(FORMAT_DATE);
 
     private Ui ui;

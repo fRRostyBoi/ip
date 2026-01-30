@@ -15,7 +15,7 @@ import notjippity.tasks.TaskTracker;
  */
 public class DeadlineCmd extends Command {
 
-    private static final String FORMAT_CMD = "Format: /deadline <Name> --by <" + Deadline.DATE_FORMAT + ">";
+    private static final String FORMAT_CMD = "Format: deadline <Name> --by <" + Deadline.DATE_FORMAT + ">";
 
     private Ui ui;
     private TaskTracker taskTracker;
