@@ -15,7 +15,7 @@ import java.time.format.DateTimeParseException;
  */
 public class EventCmd extends Command {
 
-    private static final String FORMAT_CMD = "Format: /event <Name> --from <" + Event.FORMAT_DATE
+    private static final String FORMAT_CMD = "Format: event <Name> --from <" + Event.FORMAT_DATE
             + "> --to <" + Event.FORMAT_DATE + ">";
 
     private Ui ui;
