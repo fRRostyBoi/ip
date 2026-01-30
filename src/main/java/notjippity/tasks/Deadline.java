@@ -8,6 +8,9 @@ import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Represents a Deadline task
+ */
 public class Deadline extends Task {
 
     public static final String DATE_FORMAT = "dd/MM/yyyy HHmm";
@@ -15,19 +18,33 @@ public class Deadline extends Task {
 
     private LocalDateTime byDateTime;
 
+    /**
+     * Returns a new Deadline instance
+     *
+     * @param name The task name
+     * @param byDateTime The deadline for this task
+     */
     public Deadline(String name, LocalDateTime byDateTime) {
         super(name);
         this.byDateTime = byDateTime;
     }
 
+    /**
+     * Returns a new Deadline instance
+     *
+     * @param name The task name
+     * @param completed Whether the task has been completed
+     * @param byDateTime The deadline for this task
+     */
     private Deadline(String name, boolean completed, LocalDateTime byDateTime) {
         super(name, completed);
         this.byDateTime = byDateTime;
     }
 
     /**
-     * Checks if the deadline ByDate matches the given date
-     * @return True if the deadline matches
+     * Checks if the deadline matches the given date
+     *
+     * @return True if the deadline matches the given date
      */
     public boolean hasDate(LocalDate date) {
         return date.isEqual(ChronoLocalDate.from(byDateTime));
@@ -50,10 +67,11 @@ public class Deadline extends Task {
     }
 
     /**
-     * Converts data part strings into a Deadline task
+     * Constructs a Deadline instance from data part strings
+     *
      * @param dataParts The data parts from Task.createTaskFromString
-     * @return The Deadline Task
-     * @throws StorageException If any data part is of an invalid format
+     * @return The Deadline instance
+     * @throws StorageException If any data part has an invalid format
      */
     public static Deadline createTaskFromDataParts(String[] dataParts) throws StorageException {
         if (dataParts.length < 4) {

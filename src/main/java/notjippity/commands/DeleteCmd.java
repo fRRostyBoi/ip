@@ -18,7 +18,10 @@ public class DeleteCmd extends Command {
     private TaskTracker taskTracker;
 
     /**
-     * Returns a new instance of DeleteCmd
+     * Returns a new DeleteCmd instance
+     *
+     * @param ui The bot's UI
+     * @param taskTracker The bot's task tracker
      */
     public DeleteCmd(Ui ui, TaskTracker taskTracker) {
         super("delete");
@@ -29,6 +32,7 @@ public class DeleteCmd extends Command {
     /**
      * Deletes a task with the task index provided in argStr
      * (follows the index numbering of list command)
+     *
      * @param cmdStr The command string
      * @param argStr The string of arguments
      * @throws CmdFormatException If the command is of an invalid format

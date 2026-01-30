@@ -17,7 +17,10 @@ public class UndoCmd extends Command {
     private TaskTracker taskTracker;
 
     /**
-     * Returns a new instance of UndoCmd
+     * Returns a new UndoCmd instance
+     *
+     * @param ui The bot's UI
+     * @param taskTracker The bot's task tracker
      */
     public UndoCmd(Ui ui, TaskTracker taskTracker) {
         super("undo");
@@ -28,6 +31,7 @@ public class UndoCmd extends Command {
     /**
      * Sets a task's completion status to incomplete with the task index
      * provided in argStr (follows the index numbering of list command)
+     *
      * @param cmdStr The command string
      * @param argStr The string of arguments
      * @throws CmdFormatException If the command is of an invalid format

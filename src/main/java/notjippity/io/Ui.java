@@ -15,7 +15,8 @@ public class Ui {
 
     /**
      * Prompts user for a single-line input and returns it
-     * @return User's input as a string
+     *
+     * @return The user's input as a string
      */
     public String getUserInput() {
         System.out.print(CLI_INPUT_PREFIX);
@@ -24,7 +25,8 @@ public class Ui {
 
     /**
      * Sends a message to the CLI prefixed with the bot's name
-     * @param message Message to send
+     *
+     * @param message The message to send
      */
     public void send(String message) {
         sendRaw(CLI_OUTPUT_PREFIX + message);
@@ -32,7 +34,8 @@ public class Ui {
 
     /**
      * Sends a message to the CLI prefixed with the bot's spacer
-     * @param message Message to send
+     *
+     * @param message The message to send
      */
     public void sendWithSpacer(String message) {
         sendRaw(CLI_OUTPUT_SPACER + message);
@@ -40,16 +43,18 @@ public class Ui {
 
     /**
      * Sends a message to the CLI on its own, without any appendages or formatting
-     * @param message Message to send
+     *
+     * @param message The message to send
      */
     public void sendRaw(String message) {
         System.out.println(message);
     }
 
     /**
-     * Sends a series of messages to the CLI. The first line with be prefixed with the bot name
-     * while the subsequent lines will be prefixed with the spacer instead
-     * @param messages Messages to send
+     * Sends a series of messages to the CLI. The first line is sent with send() while
+     * the rest is sent using sendWithSpacer().
+     *
+     * @param messages The series of messages to send
      */
     public void send(String... messages) {
         boolean isFirst = true;

@@ -22,6 +22,9 @@ import notjippity.tasks.Task;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents the NotJippity bot and handles all overarching interactions
+ */
 public class NotJippity {
 
     private Ui ui;
@@ -31,6 +34,11 @@ public class NotJippity {
 
     private boolean isRunning = true;
 
+    /**
+     * Starts the chatbot
+     *
+     * @param args Startup arguments
+     */
     public static void main(String[] args) {
         NotJippity bot = new NotJippity();
         bot.init();
@@ -39,22 +47,22 @@ public class NotJippity {
     }
 
     /**
-     * Performs the bot's startup sequence, sending the welcome message when done.
-     * This method must be called at the start of the program, before any methods.
+     * Runs the bot's startup sequence. Must be called before performing any further bot logic.
      * If any initialisation error occurs, the bot will terminate immediately.
      */
     private void init() {
         ui = new Ui();
         taskTracker = new TaskTracker();
         storage = new Storage(ui);
-        storage.init();
 
         try {
+            storage.init();
+
             for (Task task : storage.loadData()) {
                 taskTracker.addTask(task);
             }
-        } catch (StorageException exception) {
-            ui.send(exception.getMessage());
+        } catch (FatalNJException exception) {
+            ui.sendRaw(exception.getMessage());
             System.exit(1);
         }
 
@@ -74,8 +82,7 @@ public class NotJippity {
     }
 
     /**
-     * Performs the bot's shutdown sequence, sending the exit message when done.
-     * This method must be called at the end of the program, after all methods.
+     * Runs the bot's shutdown sequence. Must be called after all logic ends and before bot termination.
      */
     private void shutdown() {
         try {
@@ -88,7 +95,7 @@ public class NotJippity {
     }
 
     /**
-     * Activates the bot's main logic. Loops infinitely to handle inputs, terminating when the user types "bye"
+     * Starts an infinite loop to handle the bot's main logic
      */
     private void startMainLoop() {
         while (isRunning) {
@@ -122,6 +129,13 @@ public class NotJippity {
     }
 
     /**
+     * Stops the main loop of the bot
+     */
+    public void stopMainLoop() {
+        isRunning = false;
+    }
+
+    /**
      * Prints the same message provided as argument
      *
      * @param message Message to make the bot echo
@@ -144,13 +158,6 @@ public class NotJippity {
     private void printExitMsg() {
         ui.send("Aite cool, cya.");
         ui.sendWithSpacer("____________________________________________________________");
-    }
-
-    /**
-     * Stops the main loop of the bot
-     */
-    public void stopMainLoop() {
-        isRunning = false;
     }
 
 }

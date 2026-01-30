@@ -22,7 +22,10 @@ public class EventCmd extends Command {
     private TaskTracker taskTracker;
 
     /**
-     * Returns a new instance of EventCommand
+     * Returns a new EventCommand instance
+     *
+     * @param ui The bot's UI
+     * @param taskTracker The bot's task tracker
      */
     public EventCmd(Ui ui, TaskTracker taskTracker) {
         super("event");
@@ -32,6 +35,7 @@ public class EventCmd extends Command {
 
     /**
      * Adds an Event task into the tasklist and executes feedback
+     *
      * @param argStr User's input command arguments
      * @throws MissingArgException If user input is missing any arguments"
      * @throws CmdFormatException If flags are in the wrong order
