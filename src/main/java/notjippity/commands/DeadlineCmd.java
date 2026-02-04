@@ -60,8 +60,8 @@ public class DeadlineCmd extends Command {
             throw new MissingArgException("Didja forget to put something at the back of --by? (" + FORMAT_CMD + ")");
         }
 
-        String taskName = argSets[0].trim(),
-                byDateStr = argSets[1].trim();
+        String taskName = argSets[0].trim();
+        String byDateStr = argSets[1].trim();
         LocalDateTime byDate;
 
         try {

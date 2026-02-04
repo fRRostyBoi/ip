@@ -14,8 +14,8 @@ import notjippity.commands.ListCmd;
 import notjippity.commands.ToDoCmd;
 import notjippity.commands.ToggleCmd;
 import notjippity.commands.UndoCmd;
-import notjippity.exceptions.FatalNJException;
-import notjippity.exceptions.NJException;
+import notjippity.exceptions.FatalNjException;
+import notjippity.exceptions.NjException;
 import notjippity.exceptions.StorageException;
 import notjippity.io.Storage;
 import notjippity.io.Ui;
@@ -62,7 +62,7 @@ public class NotJippity {
             for (Task task : storage.loadData()) {
                 taskTracker.addTask(task);
             }
-        } catch (FatalNJException exception) {
+        } catch (FatalNjException exception) {
             ui.sendRaw(exception.getMessage());
             System.exit(1);
         }
@@ -112,9 +112,9 @@ public class NotJippity {
                     match = true;
                     try {
                         command.execute(cmdString, argString);
-                    } catch (NJException exception) {
+                    } catch (NjException exception) {
                         ui.send(exception.getMessage());
-                        if (exception instanceof FatalNJException) {
+                        if (exception instanceof FatalNjException) {
                             System.exit(1);
                         }
                     }
@@ -124,7 +124,6 @@ public class NotJippity {
 
             // If a match isn't found, send an error message
             if (!match) {
-//                throw new UnknownCmdException("Idk what's \"" + cmdString + "\". Typo maybe?");
                 ui.send("Idk what's \"" + cmdString + "\". Typo maybe?");
             }
         }

@@ -33,24 +33,6 @@ public class Ui {
     }
 
     /**
-     * Sends a message to the CLI prefixed with the bot's spacer
-     *
-     * @param message The message to send
-     */
-    public void sendWithSpacer(String message) {
-        sendRaw(CLI_OUTPUT_SPACER + message);
-    }
-
-    /**
-     * Sends a message to the CLI on its own, without any appendages or formatting
-     *
-     * @param message The message to send
-     */
-    public void sendRaw(String message) {
-        System.out.println(message);
-    }
-
-    /**
      * Sends a series of messages to the CLI. The first line is sent with send() while
      * the rest is sent using sendWithSpacer().
      *
@@ -67,6 +49,24 @@ public class Ui {
 
             sendWithSpacer(message);
         }
+    }
+
+    /**
+     * Sends a message to the CLI prefixed with the bot's spacer
+     *
+     * @param message The message to send
+     */
+    public void sendWithSpacer(String message) {
+        sendRaw(CLI_OUTPUT_SPACER + message);
+    }
+
+    /**
+     * Sends a message to the CLI on its own, without any appendages or formatting
+     *
+     * @param message The message to send
+     */
+    public void sendRaw(String message) {
+        System.out.println(message);
     }
 
 }

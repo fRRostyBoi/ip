@@ -1,6 +1,6 @@
 package notjippity.commands;
 
-import notjippity.exceptions.NJException;
+import notjippity.exceptions.NjException;
 
 /**
  * Handles behaviour and implementation for recognised NotJippity commands
@@ -23,9 +23,9 @@ public abstract class Command {
      *
      * @param cmdStr The command string
      * @param argStr The string of arguments
-     * @throws NJException If any execution error occurs
+     * @throws NjException If any execution error occurs
      */
-    public abstract void execute(String cmdStr, String argStr) throws NJException;
+    public abstract void execute(String cmdStr, String argStr) throws NjException;
 
     /**
      * Returns the string that triggers this Command
