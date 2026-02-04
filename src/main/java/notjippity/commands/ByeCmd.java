@@ -1,7 +1,7 @@
 package notjippity.commands;
 
 import notjippity.NotJippity;
-import notjippity.exceptions.NJException;
+import notjippity.exceptions.NjException;
 
 /**
  * Handles "bye" command logic and behaviour
@@ -27,7 +27,7 @@ public class ByeCmd extends Command {
      * @param argStr The string of arguments
      */
     @Override
-    public void execute(String cmdStr, String argStr) throws NJException {
+    public void execute(String cmdStr, String argStr) throws NjException {
         notJippity.stopMainLoop();
     }
 

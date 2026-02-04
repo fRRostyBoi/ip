@@ -62,14 +62,18 @@ public class EventCmd extends Command {
         }
 
         String[] exclNameArgs = argStr.trim().split("--from");
-        String taskName = exclNameArgs[0].trim(), exclFromArgs = exclNameArgs[1].trim();
+        String taskName = exclNameArgs[0].trim();
+        String exclFromArgs = exclNameArgs[1].trim();
         String[] exclToArgs = exclFromArgs.split("--to");
-        String fromStr = exclToArgs[0].trim(), toStr = exclToArgs[1].trim();
-        LocalDateTime fromDate, toDate;
+        String fromStr = exclToArgs[0].trim();
+        String toStr = exclToArgs[1].trim();
+        LocalDateTime fromDate;
+        LocalDateTime toDate;
 
         // If the arguments following --from or --to is empty
         if (fromStr.isEmpty() || toStr.isEmpty()) {
-            throw new MissingArgException("Didja forget to put something at the back of --from or --to? (" + FORMAT_CMD + ")");
+            throw new MissingArgException("Didja forget to put something at the back of "
+                    + "--from or --to? (" + FORMAT_CMD + ")");
         }
 
         try {

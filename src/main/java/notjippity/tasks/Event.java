@@ -16,7 +16,8 @@ public class Event extends Task {
     public static final String FORMAT_DATE = "dd/MM/yyyy HHmm";
     public static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern(FORMAT_DATE);
 
-    private LocalDateTime fromDateTime, toDateTime;
+    private LocalDateTime fromDateTime;
+    private LocalDateTime toDateTime;
 
     /**
      * Returns a new Event instance
@@ -51,8 +52,8 @@ public class Event extends Task {
      * @return True if any date in the date range matches
      */
     public boolean hasDate(LocalDate date) {
-        ChronoLocalDate fromDate = ChronoLocalDate.from(fromDateTime),
-                toDate = ChronoLocalDate.from(toDateTime);
+        ChronoLocalDate fromDate = ChronoLocalDate.from(fromDateTime);
+        ChronoLocalDate toDate = ChronoLocalDate.from(toDateTime);
         return date.isEqual(fromDate) || date.isEqual(toDate) || (date.isAfter(fromDate) && date.isBefore(toDate));
     }
 
@@ -86,8 +87,8 @@ public class Event extends Task {
             throw new StorageException("Insufficient arguments; expected 5 but found" + dataParts.length);
         }
 
-        String name = dataParts[1],
-                statusStr = dataParts[2];
+        String name = dataParts[1];
+        String statusStr = dataParts[2];
         if (name.isEmpty()) {
             throw new StorageException("Invalid argument #1; expected Task name but found empty string");
         }
@@ -99,9 +100,10 @@ public class Event extends Task {
             throw new StorageException("Invalid argument #3; expected Y/N but found " + statusStr);
         }
 
-        String fromStr = dataParts[3],
-                toStr = dataParts[4];
-        LocalDateTime fromDate, toDate;
+        String fromStr = dataParts[3];
+        String toStr = dataParts[4];
+        LocalDateTime fromDate;
+        LocalDateTime toDate;
 
         if (fromStr.isEmpty()) {
             throw new StorageException("Invalid argument #4; expected FromDate but found empty string");

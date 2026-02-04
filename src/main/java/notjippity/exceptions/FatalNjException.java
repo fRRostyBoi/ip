@@ -3,9 +3,9 @@ package notjippity.exceptions;
 /**
  * Represents a fatal NotJippity exception. After handling the error, the program should terminate.
  */
-public class FatalNJException extends NJException {
+public class FatalNjException extends NjException {
 
-    public FatalNJException(String message) {
+    public FatalNjException(String message) {
         super(message);
     }
 

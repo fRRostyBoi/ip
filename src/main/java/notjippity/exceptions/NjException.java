@@ -3,9 +3,9 @@ package notjippity.exceptions;
 /**
  * Represents an abstract NotJippity exception
  */
-public abstract class NJException extends Exception {
+public abstract class NjException extends Exception {
 
-    public NJException(String message) {
+    public NjException(String message) {
         super(message);
     }
 

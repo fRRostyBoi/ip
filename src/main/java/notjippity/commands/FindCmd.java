@@ -1,14 +1,9 @@
 package notjippity.commands;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 
-import notjippity.exceptions.CmdFormatException;
 import notjippity.exceptions.MissingArgException;
 import notjippity.io.Ui;
-import notjippity.tasks.Deadline;
-import notjippity.tasks.Event;
 import notjippity.tasks.Task;
 import notjippity.tasks.TaskTracker;
 
@@ -46,7 +41,8 @@ public class FindCmd extends Command {
 
         // Filter out the tasks which are relevant to the given date, along with the actual list indices
         HashMap<Integer, Task> tasks = new HashMap<>();
-        int listIndex = 1, lastAddedIndex = 0;
+        int listIndex = 1;
+        int lastAddedIndex = 0;
         for (Task task : taskTracker.getTasks()) {
             if (task.matchesKeyword(argStr)) {
                 tasks.put(listIndex, task);

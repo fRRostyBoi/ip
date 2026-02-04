@@ -78,8 +78,8 @@ public class Deadline extends Task {
             throw new StorageException("Insufficient arguments; expected 4 but found" + dataParts.length);
         }
 
-        String name = dataParts[1],
-                statusStr = dataParts[2];
+        String name = dataParts[1];
+        String statusStr = dataParts[2];
         if (name.isEmpty()) {
             throw new StorageException("Invalid argument #1; expected Task name but found empty string");
         }

@@ -85,7 +85,8 @@ public class ListCmd extends Command {
 
             // Filter out the tasks which are relevant to the given date, along with the actual list indices
             HashMap<Integer, Task> tasks = new HashMap<>();
-            int listIndex = 1, lastAddedIndex = 0;
+            int listIndex = 1;
+            int lastAddedIndex = 0;
             for (Task task : taskTracker.getTasks()) {
                 if (task instanceof Deadline deadline) {
                     if (deadline.hasDate(date)) {
@@ -103,7 +104,8 @@ public class ListCmd extends Command {
             }
 
             if (tasks.isEmpty()) {
-                ui.send("Didn't find anything on " + date.format(DATE_FORMATTER) + " yet, wanna add some stuff? (deadline, event)");
+                ui.send("Didn't find anything on " + date.format(DATE_FORMATTER)
+                        + " yet, wanna add some stuff? (deadline, event)");
                 return;
             }
 

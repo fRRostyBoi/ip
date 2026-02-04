@@ -40,7 +40,8 @@ public class DeleteCmd extends Command {
      * @throws InvalidArgException If there are invalid arguments
      */
     @Override
-    public void execute(String cmdStr, String argStr) throws CmdFormatException, MissingArgException, InvalidArgException {
+    public void execute(String cmdStr, String argStr) throws
+            CmdFormatException, MissingArgException, InvalidArgException {
         if (argStr == null) {
             throw new MissingArgException("Which one? (" + FORMAT_CMD + ")");
         }
@@ -51,9 +52,11 @@ public class DeleteCmd extends Command {
             int index = Integer.parseInt(argStr);
             task = taskTracker.getTask(index - 1);
         } catch (NumberFormatException exception) {
-            throw new CmdFormatException("Idk waddat, enter the index of the task as seen in the \"list\" command instead");
+            throw new CmdFormatException("Idk waddat, enter the index of the task as seen "
+                    + "in the \"list\" command instead");
         } catch (IndexOutOfBoundsException exception) {
-            throw new InvalidArgException("Uhhhh we don't have task #" + argStr + ", maybe check with \"list\" again?");
+            throw new InvalidArgException("Uhhhh we don't have task #" + argStr
+                    + ", maybe check with \"list\" again?");
         }
 
         taskTracker.removeTask(task);
