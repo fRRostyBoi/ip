@@ -2,46 +2,44 @@ package notjippity.commands;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 
 import notjippity.exceptions.CmdFormatException;
 import notjippity.exceptions.MissingArgException;
-import notjippity.io.Ui;
 import notjippity.tasks.Event;
 import notjippity.tasks.Task;
 import notjippity.tasks.TaskTracker;
 
 /**
- * Handles "Event" command logic and behaviour
+ * Handles "Event" command logic and behaviour.
  */
 public class EventCmd extends Command {
 
     private static final String FORMAT_CMD = "Format: event <Name> --from <" + Event.FORMAT_DATE
             + "> --to <" + Event.FORMAT_DATE + ">";
 
-    private Ui ui;
     private TaskTracker taskTracker;
 
     /**
-     * Returns a new EventCommand instance
+     * Returns a new EventCommand instance.
      *
-     * @param ui The bot's UI
-     * @param taskTracker The bot's task tracker
+     * @param taskTracker The bot's task tracker.
      */
-    public EventCmd(Ui ui, TaskTracker taskTracker) {
+    public EventCmd(TaskTracker taskTracker) {
         super("event");
-        this.ui = ui;
         this.taskTracker = taskTracker;
     }
 
     /**
-     * Adds an Event task into the tasklist and executes feedback
+     * Adds an Event task into the tasklist.
      *
-     * @param argStr User's input command arguments
-     * @throws MissingArgException If user input is missing any arguments"
-     * @throws CmdFormatException If flags are in the wrong order
+     * @param argStr User's input command arguments.
+     * @return The bot's response.
+     * @throws MissingArgException If user input is missing any arguments.
+     * @throws CmdFormatException  If flags are in the wrong order.
      */
     @Override
-    public void execute(String cmdStr, String argStr) throws CmdFormatException, MissingArgException {
+    public List<String> execute(String cmdStr, String argStr) throws CmdFormatException, MissingArgException {
         // If the user input something like "event", "event --from [...]" or "event --to [...]"
         if (argStr == null) {
             throw new MissingArgException("First things first, what's this task called? (" + FORMAT_CMD + ")");
@@ -85,7 +83,7 @@ public class EventCmd extends Command {
 
         Task task = new Event(taskName, fromDate, toDate);
         taskTracker.addTask(task);
-        ui.send("++ " + task + " (" + taskTracker.getSize() + " tasks)");
+        return List.of("++ " + task + " (" + taskTracker.getSize() + " tasks)");
     }
 
 }

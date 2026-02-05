@@ -3,7 +3,7 @@ package notjippity.tasks;
 import notjippity.exceptions.StorageException;
 
 /**
- * Represents an abstract Task
+ * Represents an abstract Task.
  */
 public abstract class Task {
 
@@ -14,19 +14,19 @@ public abstract class Task {
     protected boolean isCompleted;
 
     /**
-     * Returns a new Task instance
+     * Returns a new Task instance.
      *
-     * @param name The task name
+     * @param name The task name.
      */
     protected Task(String name) {
         this.name = name;
     }
 
     /**
-     * Returns a new Task instance
+     * Returns a new Task instance.
      *
-     * @param name The task name
-     * @param isCompleted Whether the task has been completed
+     * @param name The task name.
+     * @param isCompleted Whether the task has been completed.
      */
     protected Task(String name, boolean isCompleted) {
         this.name = name;
@@ -34,16 +34,16 @@ public abstract class Task {
     }
 
     /**
-     * Returns the icon associated with this task type
+     * Returns the icon associated with this task type.
      *
-     * @return The icon representing this task type
+     * @return The icon representing this task type.
      */
     public abstract String getTypeIcon();
 
     /**
-     * Converts this Task into its data string format, which may be saved to/loaded from a file
+     * Converts this Task into its data string format, which may be saved to/loaded from a file.
      *
-     * @return The Task data in string format
+     * @return The Task data in string format.
      */
     public abstract String getDataString();
 
@@ -53,39 +53,39 @@ public abstract class Task {
     }
 
     /**
-     * Returns the indicator corresponding to the task's "completed" status
+     * Returns the indicator corresponding to the task's "completed" status.
      *
-     * @return The "completed" status indicator
+     * @return The "completed" status indicator.
      */
     private String getStatusMsg() {
-        return isCompleted() ? "X" : " ";
+        return isCompleted() ? "X" : "  ";
     }
 
     /**
-     * Returns whether the Task is completed
+     * Returns whether the Task is completed.
      *
-     * @return Whether the Task is completed
+     * @return Whether the Task is completed.
      */
     public boolean isCompleted() {
         return isCompleted;
     }
 
     /**
-     * Toggles the Task's completed status
+     * Toggles the Task's completed status.
      */
     public void toggleComplete() {
         isCompleted = !isCompleted;
     }
 
     /**
-     * Sets the Task as completed
+     * Sets the Task as completed.
      */
     public void complete() {
         isCompleted = true;
     }
 
     /**
-     * Sets the Task as incomplete
+     * Sets the Task as incomplete.
      */
     public void undo() {
         isCompleted = false;
@@ -94,7 +94,7 @@ public abstract class Task {
     /**
      * Checks if the Task name contains the given keyword. Ignores case sensitivity.
      *
-     * @return True if the Task name contains the keyword
+     * @return True if the Task name contains the keyword.
      */
     public boolean matchesKeyword(String keyword) {
         return name.toLowerCase().contains(keyword.toLowerCase());
@@ -102,11 +102,11 @@ public abstract class Task {
 
     /**
      * Returns the respective Task object according to its type given the data string.
-     * Each Task's data string must match the format returned from its getDataString() method
+     * Each Task's data string must match the format returned from its getDataString() method.
      *
-     * @param dataStr The data string
-     * @return The Task instance
-     * @throws StorageException If the data string contains an invalid type or data format
+     * @param dataStr The data string.
+     * @return The Task instance.
+     * @throws StorageException If the data string contains an invalid type or data format.
      */
     public static Task createTaskFromString(String dataStr) throws StorageException {
         String[] dataParts = dataStr.split(DATA_SPLITTER);

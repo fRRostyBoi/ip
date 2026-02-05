@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 
 import notjippity.exceptions.MissingArgException;
-import notjippity.io.Ui;
 import notjippity.tasks.TaskTracker;
 
 public class ToDoCmdTest {

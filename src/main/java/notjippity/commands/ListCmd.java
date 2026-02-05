@@ -3,18 +3,19 @@ package notjippity.commands;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import notjippity.exceptions.CmdFormatException;
 import notjippity.exceptions.MissingArgException;
-import notjippity.io.Ui;
 import notjippity.tasks.Deadline;
 import notjippity.tasks.Event;
 import notjippity.tasks.Task;
 import notjippity.tasks.TaskTracker;
 
 /**
- * Handles "list" command logic and behaviour
+ * Handles "list" command logic and behaviour.
  */
 public class ListCmd extends Command {
 
@@ -22,39 +23,37 @@ public class ListCmd extends Command {
     private static final String FORMAT_CMD = "Format: list [--date <" + FORMAT_DATE + ">]";
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(FORMAT_DATE);
 
-    private Ui ui;
     private TaskTracker taskTracker;
 
     /**
-     * Returns a new ListCmd instance
+     * Returns a new ListCmd instance.
      *
-     * @param ui The bot's UI
-     * @param taskTracker The bot's task tracker
+     * @param taskTracker The bot's task tracker.
      */
-    public ListCmd(Ui ui, TaskTracker taskTracker) {
+    public ListCmd(TaskTracker taskTracker) {
         super("list");
-        this.ui = ui;
         this.taskTracker = taskTracker;
     }
 
     /**
      * Prints the list of all tasks currently stored, or only those occurring
-     * on a specific date if the --date flag is included
+     * on a specific date if the --date flag is included.
      *
-     * @param cmdStr The command string
-     * @param argStr The string of arguments
-     * @throws CmdFormatException If the user input has an invalid format
-     * @throws MissingArgException If the user input has (a) missing argument(s)
+     * @param cmdStr The command string.
+     * @param argStr The string of arguments.
+     * @return The bot's response.
+     * @throws CmdFormatException  If the user input has an invalid format.
+     * @throws MissingArgException If the user input has (a) missing argument(s).
      */
     @Override
-    public void execute(String cmdStr, String argStr) throws CmdFormatException, MissingArgException {
+    public List<String> execute(String cmdStr, String argStr) throws CmdFormatException, MissingArgException {
+        List<String> messages = new ArrayList<>();
         if (argStr == null) {
             if (taskTracker.getSize() == 0) {
-                ui.send("Nothing here yet man, wanna add some stuff? (todo, deadline, event)");
-                return;
+                return List.of("Nothing here yet man, wanna add some stuff? (todo, deadline, event)");
             }
 
-            ui.send("Here's what we have so far:");
+            messages.add("Here's what we have so far:");
 
             int maxDigits = 1 + (int) Math.floor(Math.log10(taskTracker.getSize()));
 
@@ -67,10 +66,9 @@ public class ListCmd extends Command {
                 for (int i = 0; i < maxDigits - curDigits; i++) {
                     indexStr.append(" ");
                 }
-                ui.sendWithSpacer(indexStr.toString() + task);
+                messages.add(indexStr.toString() + task);
             }
         } else if (argStr.toLowerCase().startsWith("--date")) {
-
             String dateStr = argStr.replaceFirst("--date", "").trim();
             if (dateStr.isEmpty()) {
                 throw new MissingArgException("On which date? (" + FORMAT_CMD + ")");
@@ -104,12 +102,11 @@ public class ListCmd extends Command {
             }
 
             if (tasks.isEmpty()) {
-                ui.send("Didn't find anything on " + date.format(DATE_FORMATTER)
+                return List.of("Didn't find anything on " + date.format(DATE_FORMATTER)
                         + " yet, wanna add some stuff? (deadline, event)");
-                return;
             }
 
-            ui.send("Here's what we have on " + date.format(DATE_FORMATTER) + ":");
+            messages.add("Here's what we have on " + date.format(DATE_FORMATTER) + ":");
 
             // Print the list of tasks. Append spaces after
             // tasks indices with lesser digits so the
@@ -122,11 +119,13 @@ public class ListCmd extends Command {
                 for (int i = 0; i < maxDigits - curDigits; i++) {
                     indexStr.append(" ");
                 }
-                ui.sendWithSpacer(indexStr.toString() + task);
+                messages.add(indexStr.toString() + task);
             }
         } else {
             throw new CmdFormatException("Uhhh idk waddat (" + FORMAT_CMD + ")");
         }
+
+        return messages;
     }
 
 }

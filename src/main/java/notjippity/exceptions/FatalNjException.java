@@ -5,6 +5,11 @@ package notjippity.exceptions;
  */
 public class FatalNjException extends NjException {
 
+    /**
+     * Returns a FatalNjException instance.
+     *
+     * @param message The error message.
+     */
     public FatalNjException(String message) {
         super(message);
     }

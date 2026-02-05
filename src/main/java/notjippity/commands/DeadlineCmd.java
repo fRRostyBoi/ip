@@ -2,44 +2,44 @@ package notjippity.commands;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 
 import notjippity.exceptions.CmdFormatException;
 import notjippity.exceptions.MissingArgException;
-import notjippity.io.Ui;
 import notjippity.tasks.Deadline;
 import notjippity.tasks.Task;
 import notjippity.tasks.TaskTracker;
 
 /**
- * Handles "Deadline" command logic and behaviour
+ * Handles "Deadline" command logic and behaviour.
  */
 public class DeadlineCmd extends Command {
 
     private static final String FORMAT_CMD = "Format: deadline <Name> --by <" + Deadline.DATE_FORMAT + ">";
 
-    private Ui ui;
     private TaskTracker taskTracker;
 
     /**
-     * Returns a new DeadlineCmd instance
+     * Returns a new DeadlineCmd instance.
      *
-     * @param ui The bot's UI
-     * @param taskTracker The bot's task tracker
+     * @param taskTracker The bot's task tracker.
      */
-    public DeadlineCmd(Ui ui, TaskTracker taskTracker) {
+    public DeadlineCmd(TaskTracker taskTracker) {
         super("deadline");
-        this.ui = ui;
         this.taskTracker = taskTracker;
     }
 
     /**
-     * Adds a Deadline task into the tasklist and executes feedback
+     * Adds a Deadline task into the tasklist.
      *
-     * @param argStr User's input command arguments
-     * @throws MissingArgException If user input is missing any arguments"
+     * @param cmdStr The command string.
+     * @param argStr User's input command arguments.
+     * @return The bot's response.
+     * @throws CmdFormatException  If user input is of an invalid format.
+     * @throws MissingArgException If user input is missing any arguments.
      */
     @Override
-    public void execute(String cmdStr, String argStr) throws CmdFormatException, MissingArgException {
+    public List<String> execute(String cmdStr, String argStr) throws CmdFormatException, MissingArgException {
         // If the user input something like "deadline" or "deadline --by [...]"
         if (argStr == null) {
             throw new MissingArgException("First things first, what's this task called? (" + FORMAT_CMD + ")");
@@ -72,7 +72,7 @@ public class DeadlineCmd extends Command {
 
         Task task = new Deadline(taskName, byDate);
         taskTracker.addTask(task);
-        ui.send("++ " + task + " (" + taskTracker.getSize() + " total)");
+        return List.of("++ " + task + " (" + taskTracker.getSize() + " total)");
     }
 
 }

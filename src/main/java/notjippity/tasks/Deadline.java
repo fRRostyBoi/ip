@@ -9,7 +9,7 @@ import java.time.format.DateTimeParseException;
 import notjippity.exceptions.StorageException;
 
 /**
- * Represents a Deadline task
+ * Represents a Deadline task.
  */
 public class Deadline extends Task {
 
@@ -19,10 +19,10 @@ public class Deadline extends Task {
     private LocalDateTime byDateTime;
 
     /**
-     * Returns a new Deadline instance
+     * Returns a new Deadline instance.
      *
-     * @param name The task name
-     * @param byDateTime The deadline for this task
+     * @param name       The task name.
+     * @param byDateTime The deadline for this task.
      */
     public Deadline(String name, LocalDateTime byDateTime) {
         super(name);
@@ -30,11 +30,11 @@ public class Deadline extends Task {
     }
 
     /**
-     * Returns a new Deadline instance
+     * Returns a new Deadline instance.
      *
-     * @param name The task name
-     * @param isCompleted Whether the task has been completed
-     * @param byDateTime The deadline for this task
+     * @param name        The task name.
+     * @param isCompleted Whether the task has been completed.
+     * @param byDateTime  The deadline for this task.
      */
     private Deadline(String name, boolean isCompleted, LocalDateTime byDateTime) {
         super(name, isCompleted);
@@ -42,9 +42,9 @@ public class Deadline extends Task {
     }
 
     /**
-     * Checks if the deadline matches the given date
+     * Checks if the deadline matches the given date.
      *
-     * @return True if the deadline matches the given date
+     * @return True if the deadline matches the given date.
      */
     public boolean hasDate(LocalDate date) {
         return date.isEqual(ChronoLocalDate.from(byDateTime));
@@ -67,11 +67,11 @@ public class Deadline extends Task {
     }
 
     /**
-     * Constructs a Deadline instance from data part strings
+     * Constructs a Deadline instance from data part strings.
      *
-     * @param dataParts The data parts from Task.createTaskFromString
-     * @return The Deadline instance
-     * @throws StorageException If any data part has an invalid format
+     * @param dataParts The data parts from Task.createTaskFromString.
+     * @return The Deadline instance.
+     * @throws StorageException If any data part has an invalid format.
      */
     public static Deadline createTaskFromDataParts(String[] dataParts) throws StorageException {
         if (dataParts.length < 4) {

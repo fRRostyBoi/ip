@@ -9,7 +9,7 @@ import java.time.format.DateTimeParseException;
 import notjippity.exceptions.StorageException;
 
 /**
- * Represents an Event task
+ * Represents an Event task.
  */
 public class Event extends Task {
 
@@ -22,9 +22,9 @@ public class Event extends Task {
     /**
      * Returns a new Event instance
      *
-     * @param name The task name
-     * @param fromDateTime The DateTime from which this event starts
-     * @param toDateTime The DateTime from which this event ends
+     * @param name         The task name.
+     * @param fromDateTime The DateTime from which this event starts.
+     * @param toDateTime   The DateTime from which this event ends.
      */
     public Event(String name, LocalDateTime fromDateTime, LocalDateTime toDateTime) {
         super(name);
@@ -33,12 +33,12 @@ public class Event extends Task {
     }
 
     /**
-     * Returns a new Event instance
+     * Returns a new Event instance.
      *
-     * @param name The task name
-     * @param isCompleted Whether the task has been completed
-     * @param fromDateTime The DateTime from which this event starts
-     * @param toDateTime The DateTime from which this event ends
+     * @param name         The task name.
+     * @param isCompleted  Whether the task has been completed.
+     * @param fromDateTime The DateTime from which this event starts.
+     * @param toDateTime   The DateTime from which this event ends.
      */
     private Event(String name, boolean isCompleted, LocalDateTime fromDateTime, LocalDateTime toDateTime) {
         super(name, isCompleted);
@@ -47,9 +47,9 @@ public class Event extends Task {
     }
 
     /**
-     * Checks if the given date falls between the event date range (both inclusive)
+     * Checks if the given date falls between the event date range (both inclusive).
      *
-     * @return True if any date in the date range matches
+     * @return True if any date in the date range matches.
      */
     public boolean hasDate(LocalDate date) {
         ChronoLocalDate fromDate = ChronoLocalDate.from(fromDateTime);
@@ -76,11 +76,11 @@ public class Event extends Task {
     }
 
     /**
-     * Constructs an Event instance from data part strings
+     * Constructs an Event instance from data part strings.
      *
-     * @param dataParts The data parts from Task.createTaskFromString
-     * @return The Event instance
-     * @throws StorageException If any data part has an invalid format
+     * @param dataParts The data parts from Task.createTaskFromString.
+     * @return The Event instance.
+     * @throws StorageException If any data part has an invalid format.
      */
     public static Event createTaskFromDataParts(String[] dataParts) throws StorageException {
         if (dataParts.length < 5) {

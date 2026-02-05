@@ -1,40 +1,42 @@
 package notjippity.commands;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import notjippity.exceptions.MissingArgException;
-import notjippity.io.Ui;
 import notjippity.tasks.Task;
 import notjippity.tasks.TaskTracker;
 
 /**
- * Handles "Find" command logic and behaviour
+ * Handles "Find" command logic and behaviour.
  */
 public class FindCmd extends Command {
 
     private static final String FORMAT_CMD = "Format: find <keyword>";
 
-    private Ui ui;
     private TaskTracker taskTracker;
 
     /**
-     * Returns a new FindCmd instance
+     * Returns a new FindCmd instance.
+     *
+     * @param taskTracker The bot's task tracker.
      */
-    public FindCmd(Ui ui, TaskTracker taskTracker) {
+    public FindCmd(TaskTracker taskTracker) {
         super("find");
-        this.ui = ui;
         this.taskTracker = taskTracker;
     }
 
     /**
-     * Prints all tasks matching the keyword given in argStr
+     * Prints all tasks matching the keyword given in argStr.
      *
-     * @param cmdStr The command string
-     * @param argStr The string of arguments
-     * @throws MissingArgException If argStr is null
+     * @param cmdStr The command string.
+     * @param argStr The string of arguments.
+     * @return The bot's response.
+     * @throws MissingArgException If argStr is null.
      */
     @Override
-    public void execute(String cmdStr, String argStr) throws MissingArgException {
+    public List<String> execute(String cmdStr, String argStr) throws MissingArgException {
         if (argStr == null) {
             throw new MissingArgException("Np, just tell me what to look for (" + FORMAT_CMD + ")");
         }
@@ -53,11 +55,11 @@ public class FindCmd extends Command {
         }
 
         if (tasks.isEmpty()) {
-            ui.send("Didn't find anything matching \"" + argStr + "\", sry man");
-            return;
+            return List.of("Didn't find anything matching \"" + argStr + "\", sry man");
         }
 
-        ui.send("Here's what I found matching \"" + argStr + "\":");
+        List<String> messages = new ArrayList<>();
+        messages.add("Here's what I found matching \"" + argStr + "\":");
 
         // Print the list of tasks. Append spaces after
         // tasks indices with lesser digits so the
@@ -70,8 +72,10 @@ public class FindCmd extends Command {
             for (int i = 0; i < maxDigits - curDigits; i++) {
                 indexStr.append(" ");
             }
-            ui.sendWithSpacer(indexStr.toString() + task);
+            messages.add(indexStr.toString() + task);
         }
+
+        return messages;
     }
 
 
