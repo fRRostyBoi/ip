@@ -12,31 +12,26 @@ import notjippity.exceptions.StorageException;
 import notjippity.tasks.Task;
 
 /**
- * Represents the bot's persistent data storage system
+ * Represents the bot's persistent data storage system.
  */
 public class Storage {
 
     private static final String REL_FILE_PATH = "data/tasks.txt";
 
-    private final Ui ui;
-
     private final File file;
     private Scanner fileReader;
 
     /**
-     * Returns a new Storage instance
-     *
-     * @param ui The bot's UI
+     * Returns a new Storage instance.
      */
-    public Storage(Ui ui) {
-        this.ui = ui;
+    public Storage() {
         file = new File(REL_FILE_PATH);
     }
 
     /**
-     * Runs the Storage startup sequence. Must be called once before calling any other Storage methods
+     * Runs the Storage startup sequence. Must be called once before calling any other Storage methods.
      *
-     * @throws StorageException If an error occurs while loading the file or instantiating the File Scanner
+     * @throws StorageException If an error occurs while loading the file or instantiating the File Scanner.
      */
     public void init() throws StorageException {
         try {
@@ -48,9 +43,9 @@ public class Storage {
     }
 
     /**
-     * Creates the data file if it does not exist, along with any required parent folders
+     * Creates the data file if it does not exist, along with any required parent folders.
      *
-     * @throws StorageException If an I/O exception occurs while creating the data file
+     * @throws StorageException If an I/O exception occurs while creating the data file.
      */
     private void loadFile() throws StorageException {
         // If file does not exist, ensure parent folder(s) is/are created, then creates the file
@@ -59,7 +54,7 @@ public class Storage {
             try {
                 // If file somehow already exists, fails silently
                 if (file.createNewFile()) {
-                    ui.sendRaw("Data file not detected, created new file");
+                    System.out.println("Data file not detected, created new file");
                 }
             } catch (IOException exception) {
                 throw new StorageException("An I/O error occured while trying to create the file, exiting...");
@@ -68,9 +63,10 @@ public class Storage {
     }
 
     /**
-     * Attempts to parse the task data contained in the file into a collection of Tasks
+     * Attempts to parse the task data contained in the file into a collection of Tasks.
      *
-     * @throws StorageException If the file content is of the wrong format/corrupted
+     * @return The list of tasks loaded from file.
+     * @throws StorageException If the file content is of the wrong format/corrupted.
      */
     public List<Task> loadData() throws StorageException {
         ArrayList<Task> tasks = new ArrayList<>();
@@ -94,10 +90,10 @@ public class Storage {
     }
 
     /**
-     * Saves all Tasks to file with the provided List of data strings
+     * Saves all Tasks to file with the provided List of data strings.
      *
-     * @param dataStrings The list of data strings given by TaskTracker.getAllDataStrings()
-     * @throws StorageException If an I/O error occurs during the saving process
+     * @param dataStrings The list of data strings given by TaskTracker.getAllDataStrings().
+     * @throws StorageException If an I/O error occurs during the saving process.
      */
     public void saveData(List<String> dataStrings) throws StorageException {
         try {

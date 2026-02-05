@@ -1,8 +1,15 @@
 package notjippity;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import notjippity.commands.ByeCmd;
 import notjippity.commands.Command;
 import notjippity.commands.DeadlineCmd;
@@ -14,47 +21,61 @@ import notjippity.commands.ListCmd;
 import notjippity.commands.ToDoCmd;
 import notjippity.commands.ToggleCmd;
 import notjippity.commands.UndoCmd;
+import notjippity.controllers.MainWindow;
 import notjippity.exceptions.FatalNjException;
 import notjippity.exceptions.NjException;
 import notjippity.exceptions.StorageException;
 import notjippity.io.Storage;
-import notjippity.io.Ui;
 import notjippity.tasks.Task;
 import notjippity.tasks.TaskTracker;
 import notjippity.utils.Parser;
 
 /**
- * Represents the NotJippity bot and handles all overarching interactions
+ * Represents the NotJippity bot and handles all overarching interactions.
  */
-public class NotJippity {
+public class NotJippity extends Application {
 
-    private Ui ui;
+    private MainWindow mainWindow;
     private TaskTracker taskTracker;
     private Storage storage;
     private final List<Command> commands = new ArrayList<>();
 
-    private boolean isRunning = true;
-
     /**
-     * Starts the chatbot
-     *
-     * @param args Startup arguments
+     * Runs the bot's startup process.
+     * <p>
+     * {@inheritDoc}
      */
-    public static void main(String[] args) {
-        NotJippity bot = new NotJippity();
-        bot.init();
-        bot.startMainLoop();
-        bot.shutdown();
+    @Override
+    public void start(Stage stage) {
+        initBot();
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MainWindow.fxml"));
+            AnchorPane ap = fxmlLoader.load();
+            Scene scene = new Scene(ap);
+            Image windowIcon = new Image(getClass().getResourceAsStream("/images/window_icon.png"));
+            stage.getIcons().add(windowIcon);
+            stage.setTitle("NotJippity");
+
+            stage.setScene(scene);
+
+            mainWindow = fxmlLoader.getController();
+            mainWindow.setMain(this);
+            mainWindow.sendStartupMsg();
+
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Runs the bot's startup sequence. Must be called before performing any further bot logic.
      * If any initialisation error occurs, the bot will terminate immediately.
      */
-    private void init() {
-        ui = new Ui();
+    private void initBot() {
         taskTracker = new TaskTracker();
-        storage = new Storage(ui);
+        storage = new Storage();
 
         try {
             storage.init();
@@ -63,102 +84,57 @@ public class NotJippity {
                 taskTracker.addTask(task);
             }
         } catch (FatalNjException exception) {
-            ui.sendRaw(exception.getMessage());
+            System.out.println(exception.getMessage());
             System.exit(1);
         }
 
         // Register all the command handlers
-        commands.add(new ToDoCmd(ui, taskTracker));
-        commands.add(new DeadlineCmd(ui, taskTracker));
-        commands.add(new EventCmd(ui, taskTracker));
-        commands.add(new ListCmd(ui, taskTracker));
-        commands.add(new FindCmd(ui, taskTracker));
-        commands.add(new ToggleCmd(ui, taskTracker));
-        commands.add(new DoneCmd(ui, taskTracker));
-        commands.add(new UndoCmd(ui, taskTracker));
-        commands.add(new DeleteCmd(ui, taskTracker));
+        commands.add(new ToDoCmd(taskTracker));
+        commands.add(new DeadlineCmd(taskTracker));
+        commands.add(new EventCmd(taskTracker));
+        commands.add(new ListCmd(taskTracker));
+        commands.add(new FindCmd(taskTracker));
+        commands.add(new ToggleCmd(taskTracker));
+        commands.add(new DoneCmd(taskTracker));
+        commands.add(new UndoCmd(taskTracker));
+        commands.add(new DeleteCmd(taskTracker));
         commands.add(new ByeCmd(this));
-
-        // Startup complete, send the welcome message
-        printStartupMsg();
     }
 
     /**
      * Runs the bot's shutdown sequence. Must be called after all logic ends and before bot termination.
      */
-    private void shutdown() {
+    public void shutdown() {
         try {
             storage.saveData(taskTracker.getAllDataStrings());
         } catch (StorageException exception) {
-            ui.send(exception.getMessage());
+            System.out.println(exception.getMessage());
         }
 
-        printExitMsg();
+        mainWindow.sendExitMsg();
+        System.exit(0);
     }
 
     /**
-     * Starts an infinite loop to handle the bot's main logic
-     */
-    private void startMainLoop() {
-        while (isRunning) {
-            String input = ui.getUserInput();
-            String cmdString = Parser.getCommand(input);
-            String argString = Parser.getArgString(input);
-
-            // Try to match the given command
-            boolean match = false;
-            for (Command command : commands) {
-                if (command.getCmdName().equalsIgnoreCase(cmdString)) {
-                    match = true;
-                    try {
-                        command.execute(cmdString, argString);
-                    } catch (NjException exception) {
-                        ui.send(exception.getMessage());
-                        if (exception instanceof FatalNjException) {
-                            System.exit(1);
-                        }
-                    }
-                    break;
-                }
-            }
-
-            // If a match isn't found, send an error message
-            if (!match) {
-                ui.send("Idk what's \"" + cmdString + "\". Typo maybe?");
-            }
-        }
-    }
-
-    /**
-     * Stops the main loop of the bot
-     */
-    public void stopMainLoop() {
-        isRunning = false;
-    }
-
-    /**
-     * Prints the same message provided as argument
+     * Runs a command based on the given input and returns the response.
      *
-     * @param message Message to make the bot echo
+     * @param input The raw user input.
+     * @return The response from running the command.
+     * @throws NjException If running the command returns an error.
      */
-    private void echoMsg(String message) {
-        ui.send(message);
-    }
+    public List<String> runCmdAndGetResponse(String input) throws NjException {
+        String cmdString = Parser.getCommand(input);
+        String argString = Parser.getArgString(input);
 
-    /**
-     * Prints the startup message
-     */
-    private void printStartupMsg() {
-        ui.send("____________________________________________________________");
-        ui.sendWithSpacer("What's up?");
-    }
+        // Try to match the given command
+        for (Command command : commands) {
+            if (command.getCmdName().equalsIgnoreCase(cmdString)) {
+                return command.execute(cmdString, argString);
+            }
+        }
 
-    /**
-     * Prints the shutdown message
-     */
-    private void printExitMsg() {
-        ui.send("Aite cool, cya.");
-        ui.sendWithSpacer("____________________________________________________________");
+        // If a match isn't found, send an error message
+        return List.of("Idk what's \"" + cmdString + "\". Typo maybe?");
     }
 
 }

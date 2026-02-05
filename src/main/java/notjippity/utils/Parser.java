@@ -1,15 +1,15 @@
 package notjippity.utils;
 
 /**
- * Contains helper functions for parsing user inputs
+ * Contains helper functions for parsing user inputs.
  */
 public class Parser {
 
     /**
-     * Returns only the command portion of the user input
+     * Returns only the command portion of the user input.
      *
-     * @param input The full user input
-     * @return The command, or null if an empty input is provided
+     * @param input The full user input.
+     * @return The command, or null if an empty input is provided.
      */
     public static String getCommand(String input) {
         if (input == null) {
@@ -23,10 +23,10 @@ public class Parser {
     }
 
     /**
-     * Returns only the argument string potion of the user input
+     * Returns only the argument string potion of the user input.
      *
-     * @param input The full user input
-     * @return The string of arguments, or null if an empty string of arguments is provided
+     * @param input The full user input.
+     * @return The string of arguments, or null if an empty string of arguments is provided.
      */
     public static String getArgString(String input) {
         if (input == null) {

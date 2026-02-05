@@ -1,5 +1,7 @@
 package notjippity.commands;
 
+import java.util.List;
+
 import notjippity.NotJippity;
 import notjippity.exceptions.NjException;
 
@@ -25,10 +27,13 @@ public class ByeCmd extends Command {
      *
      * @param cmdStr The command string
      * @param argStr The string of arguments
+     * @return The bot's response
+     * @throws NjException If any execution error occurs
      */
     @Override
-    public void execute(String cmdStr, String argStr) throws NjException {
-        notJippity.stopMainLoop();
+    public List<String> execute(String cmdStr, String argStr) throws NjException {
+        notJippity.shutdown();
+        return List.of();
     }
 
 }

@@ -3,14 +3,14 @@ package notjippity.tasks;
 import notjippity.exceptions.StorageException;
 
 /**
- * Represents a ToDo task
+ * Represents a ToDo task.
  */
 public class ToDo extends Task {
 
     /**
-     * Returns a new ToDo instance
+     * Returns a new ToDo instance.
      *
-     * @param name The task name
+     * @param name The task name.
      */
     public ToDo(String name) {
         super(name);
@@ -19,8 +19,8 @@ public class ToDo extends Task {
     /**
      * Returns a new ToDo instance
      *
-     * @param name The task name
-     * @param isCompleted Whether the task has been completed
+     * @param name The task name.
+     * @param isCompleted Whether the task has been completed.
      */
     private ToDo(String name, boolean isCompleted) {
         super(name, isCompleted);
@@ -37,11 +37,11 @@ public class ToDo extends Task {
     }
 
     /**
-     * Constructs a ToDo instance from data part strings
+     * Constructs a ToDo instance from data part strings.
      *
-     * @param dataParts The data parts from Task.createTaskFromString
-     * @return The ToDo instance
-     * @throws StorageException If any data part has an invalid format
+     * @param dataParts The data parts from Task.createTaskFromString.
+     * @return The ToDo instance.
+     * @throws StorageException If any data part has an invalid format.
      */
     public static ToDo createTaskFromDataParts(String[] dataParts) throws StorageException {
         if (dataParts.length < 3) {
