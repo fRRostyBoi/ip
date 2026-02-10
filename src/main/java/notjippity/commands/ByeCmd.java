@@ -20,6 +20,7 @@ public class ByeCmd extends Command {
     public ByeCmd(NotJippity notJippity) {
         super("bye");
         this.notJippity = notJippity;
+        assert this.notJippity != null;
     }
 
     /**

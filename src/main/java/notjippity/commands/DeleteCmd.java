@@ -25,6 +25,7 @@ public class DeleteCmd extends Command {
     public DeleteCmd(TaskTracker taskTracker) {
         super("delete");
         this.taskTracker = taskTracker;
+        assert this.taskTracker != null;
     }
 
     /**

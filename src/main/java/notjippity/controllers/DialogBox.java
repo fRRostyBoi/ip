@@ -31,6 +31,12 @@ public class DialogBox extends HBox {
      * @param img  The user's display picture.
      */
     private DialogBox(String text, Image img) {
+        assert text != null;
+        assert img != null;
+
+        assert dialog != null;
+        assert displayPicture != null;
+
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(MainWindow.class.getResource("/view/DialogBox.fxml"));
             fxmlLoader.setController(this);
