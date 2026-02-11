@@ -48,7 +48,17 @@ public class NotJippity extends Application {
     @Override
     public void start(Stage stage) {
         initBot();
+        assembleUiOntoStage(stage);
+        stage.show();
+    }
 
+    /**
+     * Assembles the stage to be ready for showing.
+     * If any errors occur, the bot will terminate immediately.
+     *
+     * @param stage The stage to assemble to UI onto
+     */
+    private void assembleUiOntoStage(Stage stage) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MainWindow.fxml"));
             AnchorPane ap = fxmlLoader.load();
@@ -62,16 +72,15 @@ public class NotJippity extends Application {
             mainWindow = fxmlLoader.getController();
             mainWindow.setMain(this);
             mainWindow.sendStartupMsg();
-
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException exception) {
+            System.out.println("Error occurred while assembling UI: " + exception.getMessage());
+            System.exit(1);
         }
     }
 
     /**
-     * Runs the bot's startup sequence. Must be called before performing any further bot logic.
-     * If any initialisation error occurs, the bot will terminate immediately.
+     * Initialises the bot's controllers. Must be called before performing any further control logic.
+     * If any errors occurs, the bot will terminate immediately.
      */
     private void initBot() {
         taskTracker = new TaskTracker();
@@ -126,7 +135,7 @@ public class NotJippity extends Application {
         String cmdString = Parser.getCommand(input);
         String argString = Parser.getArgString(input);
 
-        // Try to match the given command
+        // Find and run command based on user input
         for (Command command : commands) {
             if (command.getCmdName().equalsIgnoreCase(cmdString)) {
                 return command.execute(cmdString, argString);

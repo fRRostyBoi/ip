@@ -29,7 +29,7 @@ public abstract class Task {
      * @param isCompleted Whether the task has been completed.
      */
     protected Task(String name, boolean isCompleted) {
-        this.name = name;
+        this(name);
         this.isCompleted = isCompleted;
     }
 

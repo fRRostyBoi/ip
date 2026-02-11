@@ -47,82 +47,153 @@ public class ListCmd extends Command {
      */
     @Override
     public List<String> execute(String cmdStr, String argStr) throws CmdFormatException, MissingArgException {
-        List<String> messages = new ArrayList<>();
         if (argStr == null) {
-            if (taskTracker.getSize() == 0) {
-                return List.of("Nothing here yet man, wanna add some stuff? (todo, deadline, event)");
-            }
-
-            messages.add("Here's what we have so far:");
-
-            int maxDigits = 1 + (int) Math.floor(Math.log10(taskTracker.getSize()));
-
-            // Print the list of tasks. Append spaces after tasks indices with lesser digits so the
-            // line formatting is preserved
-            int index = 1;
-            for (Task task : taskTracker.getTasks()) {
-                int curDigits = 1 + (int) Math.floor(Math.log10(index));
-                StringBuilder indexStr = new StringBuilder(index++ + ". ");
-                for (int i = 0; i < maxDigits - curDigits; i++) {
-                    indexStr.append(" ");
-                }
-                messages.add(indexStr.toString() + task);
-            }
+            return executeNormal();
         } else if (argStr.toLowerCase().startsWith("--date")) {
-            String dateStr = argStr.replaceFirst("--date", "").trim();
-            if (dateStr.isEmpty()) {
-                throw new MissingArgException("On which date? (" + FORMAT_CMD + ")");
-            }
-
-            LocalDate date;
-            try {
-                date = LocalDate.parse(dateStr, DATE_FORMATTER);
-            } catch (DateTimeParseException exception) {
-                throw new CmdFormatException("Sry bro can't understand that date format (" + FORMAT_DATE + ")");
-            }
-
-            // Filter out the tasks which are relevant to the given date, along with the actual list indices
-            HashMap<Integer, Task> tasks = new HashMap<>();
-            int listIndex = 1;
-            int lastAddedIndex = 0;
-            for (Task task : taskTracker.getTasks()) {
-                if (task instanceof Deadline deadline) {
-                    if (deadline.hasDate(date)) {
-                        tasks.put(listIndex, deadline);
-                        lastAddedIndex = listIndex;
-                    }
-                } else if (task instanceof Event event) {
-                    if (event.hasDate(date)) {
-                        tasks.put(listIndex, event);
-                        lastAddedIndex = listIndex;
-                    }
-                }
-
-                listIndex++;
-            }
-
-            if (tasks.isEmpty()) {
-                return List.of("Didn't find anything on " + date.format(DATE_FORMATTER)
-                        + " yet, wanna add some stuff? (deadline, event)");
-            }
-
-            messages.add("Here's what we have on " + date.format(DATE_FORMATTER) + ":");
-
-            // Print the list of tasks. Append spaces after
-            // tasks indices with lesser digits so the
-            // line formatting is preserved
-            int maxDigits = 1 + (int) Math.floor(Math.log10(lastAddedIndex));
-            for (int index : tasks.keySet()) {
-                Task task = tasks.get(index);
-                int curDigits = 1 + (int) Math.floor(Math.log10(index));
-                StringBuilder indexStr = new StringBuilder(index + ". ");
-                for (int i = 0; i < maxDigits - curDigits; i++) {
-                    indexStr.append(" ");
-                }
-                messages.add(indexStr.toString() + task);
-            }
+            return executeWithDate(argStr);
         } else {
             throw new CmdFormatException("Uhhh idk waddat (" + FORMAT_CMD + ")");
+        }
+    }
+
+    /**
+     * Executes the normal behaviour.
+     *
+     * @return The bot's response.
+     */
+    private List<String> executeNormal() {
+        if (taskTracker.getSize() == 0) {
+            return List.of("Nothing here yet man, wanna add some stuff? (todo, deadline, event)");
+        }
+
+        HashMap<Integer, Task> tasks = new HashMap<>();
+
+        int i = 1;
+        for (Task task : taskTracker.getTasks()) {
+            tasks.put(i, task);
+            i++;
+        }
+
+        return convertToFoundList(tasks, "Here's what we have so far:");
+    }
+
+    /**
+     * Executes the "--date" flag behaviour.
+     *
+     * @param argStr The string of arguments.
+     * @return The bot's response.
+     * @throws CmdFormatException  If the user input has an invalid format.
+     * @throws MissingArgException If the user input has (a) missing argument(s).
+     */
+    private List<String> executeWithDate(String argStr) throws CmdFormatException, MissingArgException {
+        LocalDate date = parseDate(argStr);
+
+        // Filter out the tasks which are relevant to the given date, along with the actual list indices
+        HashMap<Integer, Task> tasks = getRelevantTasks(date);
+        String formattedInput = date.format(DATE_FORMATTER);
+        if (tasks.isEmpty()) {
+            return List.of("Didn't find anything on " + formattedInput
+                    + " yet, wanna add some stuff? (deadline, event)");
+        }
+
+        return convertToFoundList(tasks, "Here's what we have on " + formattedInput + ":");
+    }
+
+    /**
+     * Parses the date argument into a LocalDate object.
+     *
+     * @param argStr The argument string.
+     * @return The LocalDate object parsed from the provided argument.
+     * @throws MissingArgException If the arg string is null.
+     */
+    private LocalDate parseDate(String argStr) throws CmdFormatException, MissingArgException {
+        if (argStr == null) {
+            throw new MissingArgException("On which date? (" + FORMAT_CMD + ")");
+        }
+
+        String dateStr = argStr.replaceFirst("--date", "").trim();
+        if (dateStr.isEmpty()) {
+            throw new MissingArgException("On which date? (" + FORMAT_CMD + ")");
+        }
+
+        try {
+            return LocalDate.parse(dateStr, DATE_FORMATTER);
+        } catch (DateTimeParseException exception) {
+            throw new CmdFormatException("Sry bro can't understand that date format (" + FORMAT_DATE + ")");
+        }
+    }
+
+    /**
+     * Returns a map of tasks which match or contains the given date.
+     *
+     * @param date The LocalDate to compare with.
+     * @return A map of Task Indices to Tasks which match the keyword.
+     */
+    private HashMap<Integer, Task> getRelevantTasks(LocalDate date) {
+        HashMap<Integer, Task> tasks = new HashMap<>();
+
+        int listIndex = 1;
+        int lastAddedIndex = 0;
+        for (Task task : taskTracker.getTasks()) {
+            if (task instanceof Deadline deadline) {
+                if (deadline.hasDate(date)) {
+                    tasks.put(listIndex, deadline);
+                    lastAddedIndex = listIndex;
+                }
+            } else if (task instanceof Event event) {
+                if (event.hasDate(date)) {
+                    tasks.put(listIndex, event);
+                    lastAddedIndex = listIndex;
+                }
+            }
+
+            listIndex++;
+        }
+        return tasks;
+    }
+
+    /**
+     * Returns the largest index amount the map of indices.
+     *
+     * @param tasks The map of indices to tasks.
+     * @return The largest index.
+     */
+    private int getLargestIndex(HashMap<Integer, Task> tasks) {
+        int largest = -1;
+
+        for (int index : tasks.keySet()) {
+            if (largest < index) {
+                largest = index;
+            }
+        }
+
+        return largest;
+    }
+
+    /**
+     * Converts the list of tasks into a list of response messages.
+     *
+     * @param tasks The list of tasks.
+     * @return A list of strings representing the tasks.
+     */
+    private List<String> convertToFoundList(HashMap<Integer, Task> tasks, String headerMsg) {
+        List<String> messages = new ArrayList<>();
+        messages.add(headerMsg);
+
+        // For indices with leser digits, add buffer spaces to match highest number of digits.
+        // Ensures all strings that come after the indices are flush.
+        int lastAddedIndex = getLargestIndex(tasks);
+        int maxDigits = 1 + (int) Math.floor(Math.log10(lastAddedIndex));
+        for (int index : tasks.keySet()) {
+            Task task = tasks.get(index);
+            int curDigits = 1 + (int) Math.floor(Math.log10(index));
+
+            StringBuilder indexStr = new StringBuilder(index + ". ");
+            for (int i = 0; i < maxDigits - curDigits; i++) {
+                indexStr.append(" ");
+            }
+
+            messages.add(indexStr.toString() + task);
         }
 
         return messages;

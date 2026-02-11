@@ -15,7 +15,7 @@ import notjippity.tasks.TaskTracker;
  */
 public class DeadlineCmd extends Command {
 
-    private static final String FORMAT_CMD = "Format: deadline <Name> --by <" + Deadline.DATE_FORMAT + ">";
+    private static final String FORMAT_CMD = "Format: deadline <Name> --by <" + Deadline.FORMAT_DATE + ">";
 
     private TaskTracker taskTracker;
 
@@ -40,39 +40,76 @@ public class DeadlineCmd extends Command {
      */
     @Override
     public List<String> execute(String cmdStr, String argStr) throws CmdFormatException, MissingArgException {
+        handleMissingName(argStr);
+        handleMissingByFlag(argStr);
+
+        String[] argSets = argStr.trim().split("--by");
+        handleMissingByDate(argSets);
+
+        String taskName = argSets[0].trim();
+        LocalDateTime byDate = parseByDate(argSets[1].trim());
+        Task task = new Deadline(taskName, byDate);
+        taskTracker.addTask(task);
+
+        return List.of("++ " + task + " (" + taskTracker.getSize() + " total)");
+    }
+
+    /**
+     * Handles missing task name input in argStr.
+     *
+     * @param argStr The argument string.
+     * @throws MissingArgException If the arg string is null or bank.
+     */
+    private void handleMissingName(String argStr) throws MissingArgException {
         // If the user input something like "deadline" or "deadline --by [...]"
         if (argStr == null) {
-            throw new MissingArgException("First things first, what's this task called? (" + FORMAT_CMD + ")");
+            throw new MissingArgException("Sooo... what's this task called? (" + FORMAT_CMD + ")");
         }
+    }
+
+    /**
+     * Handles missing "--by" flag in argStr.
+     *
+     * @param argStr The argument string.
+     * @throws MissingArgException If --by is missing in the argStr.
+     */
+    private void handleMissingByFlag(String argStr) throws MissingArgException {
         String argStringLow = argStr.toLowerCase();
+
         if (argStringLow.startsWith("--by")) {
             throw new MissingArgException("First things first, what's this task called? (" + FORMAT_CMD + ")");
         }
 
-        // If the user input doesn't contain "--by"
         if (!argStringLow.contains("--by")) {
             throw new MissingArgException("Np but tell me when it's to be done by (" + FORMAT_CMD + ")");
         }
+    }
 
-        String[] argSets = argStr.trim().split("--by");
-        // If the user input doesn't specify the date after "--by"
+    /**
+     * Handles missing date argument after the "--by" flag in argStr.
+     *
+     * @param argSets The argument string array, split using "--by".
+     * @throws MissingArgException If the date is missing.
+     */
+    private void handleMissingByDate(String[] argSets) throws MissingArgException {
         if (argSets.length == 1) {
             throw new MissingArgException("Didja forget to put something at the back of --by? (" + FORMAT_CMD + ")");
         }
+    }
 
-        String taskName = argSets[0].trim();
-        String byDateStr = argSets[1].trim();
-        LocalDateTime byDate;
-
+    /**
+     * Converts the date argument into a LocalDateTime object.
+     *
+     * @param byDateStr The date argument.
+     * @return The LocalDateTime object.
+     * @throws CmdFormatException If the date argument is not in the correct format.
+     */
+    private LocalDateTime parseByDate(String byDateStr) throws CmdFormatException {
         try {
-            byDate = LocalDateTime.parse(byDateStr, Deadline.DATETIME_FORMATTER);
+            return LocalDateTime.parse(byDateStr, Deadline.DATETIME_FORMATTER);
         } catch (DateTimeParseException exception) {
             throw new CmdFormatException("Follow the date format pls (" + FORMAT_CMD + ")");
         }
-
-        Task task = new Deadline(taskName, byDate);
-        taskTracker.addTask(task);
-        return List.of("++ " + task + " (" + taskTracker.getSize() + " total)");
     }
 
 }
