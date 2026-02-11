@@ -93,7 +93,6 @@ public class MainWindow extends AnchorPane {
         String input = userInput.getText();
         assert input != null;
 
-        dialogContainer.getChildren().add(DialogBox.createUserDialog(input, userIcon));
         userInput.clear();
 
         List<String> messages = checkAndReturnValidInput(input);
@@ -134,11 +133,9 @@ public class MainWindow extends AnchorPane {
      * @return The reply as a single string, meant for UI.
      */
     private String getBotReply(List<String> messages) {
-        StringBuilder builder = new StringBuilder();
-        for (String message : messages) {
-            builder.append("\n").append(message);
-        }
-        return builder.toString().replaceFirst("\n", "");
+        return messages.stream()
+                .reduce((identity, string) -> identity + "\n" + string)
+                .orElseThrow().replaceFirst("\n", "");
     }
 
     /**

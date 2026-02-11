@@ -96,9 +96,7 @@ public class NotJippity extends Application {
         try {
             storage.init();
 
-            for (Task task : storage.loadData()) {
-                taskTracker.addTask(task);
-            }
+            storage.loadData().forEach(task -> taskTracker.addTask(task));
         } catch (FatalNjException exception) {
             System.out.println(exception.getMessage());
             System.exit(1);

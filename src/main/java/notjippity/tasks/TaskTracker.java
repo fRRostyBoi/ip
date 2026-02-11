@@ -55,11 +55,7 @@ public class TaskTracker {
      * @return The list of data strings.
      */
     public List<String> getAllDataStrings() {
-        List<String> data = new ArrayList<>();
-        for (Task task : tasks) {
-            data.add(task.getDataString());
-        }
-        return data;
+        return tasks.stream().map(Task::getDataString).toList();
     }
 
     /**
