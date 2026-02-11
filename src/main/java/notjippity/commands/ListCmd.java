@@ -181,7 +181,7 @@ public class ListCmd extends Command {
         List<String> messages = new ArrayList<>();
         messages.add(headerMsg);
 
-        // For indices with leser digits, add buffer spaces to match highest number of digits.
+        // For indices with lesser digits, add buffer spaces to match highest number of digits.
         // Ensures all strings that come after the indices are flush.
         int lastAddedIndex = getLargestIndex(tasks);
         int maxDigits = 1 + (int) Math.floor(Math.log10(lastAddedIndex));

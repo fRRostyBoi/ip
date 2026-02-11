@@ -94,10 +94,9 @@ public class MainWindow extends AnchorPane {
         assert input != null;
 
         userInput.clear();
+        addUserDialogBox(input);
 
         List<String> messages = checkAndReturnValidInput(input);
-
-        addUserDialogBox(input);
         String botReply = getBotReply(messages);
         addBotDialogBox(botReply);
     }
@@ -120,8 +119,7 @@ public class MainWindow extends AnchorPane {
             System.out.println(exception.getMessage());
             System.exit(1);
         } catch (NjException exception) {
-            addUserDialogBox(input);
-            addBotDialogBox(exception.getMessage());
+            return List.of(exception.getMessage());
         }
         return null;
     }
@@ -134,7 +132,7 @@ public class MainWindow extends AnchorPane {
      */
     private String getBotReply(List<String> messages) {
         return messages.stream()
-                .reduce((identity, string) -> identity + "\n" + string)
+                .reduce((identity, string) -> "\n" + identity + "\n" + string)
                 .orElseThrow().replaceFirst("\n", "");
     }
 
@@ -153,7 +151,7 @@ public class MainWindow extends AnchorPane {
      * @param text The text to display.
      */
     private void addBotDialogBox(String text) {
-        dialogContainer.getChildren().add(DialogBox.createUserDialog(text, botIcon));
+        dialogContainer.getChildren().add(DialogBox.createBotDialog(text, botIcon));
     }
 
 }

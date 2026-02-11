@@ -27,7 +27,6 @@ import notjippity.exceptions.FatalNjException;
 import notjippity.exceptions.NjException;
 import notjippity.exceptions.StorageException;
 import notjippity.io.Storage;
-import notjippity.tasks.Task;
 import notjippity.tasks.TaskTracker;
 import notjippity.utils.Parser;
 
