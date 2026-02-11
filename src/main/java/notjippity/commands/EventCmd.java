@@ -6,6 +6,7 @@ import java.util.List;
 
 import notjippity.exceptions.CmdFormatException;
 import notjippity.exceptions.MissingArgException;
+import notjippity.tasks.Deadline;
 import notjippity.tasks.Event;
 import notjippity.tasks.Task;
 import notjippity.tasks.TaskTracker;
@@ -41,10 +42,44 @@ public class EventCmd extends Command {
      */
     @Override
     public List<String> execute(String cmdStr, String argStr) throws CmdFormatException, MissingArgException {
+        handleMissingName(argStr);
+        handleMissingFromToFlag(argStr);
+
+        String[] values = extractValuesFromFlags(argStr);
+        String taskName = values[0];
+        String fromStr = values[1];
+        String toStr = values[2];
+
+        handleMissingFromToDate(fromStr, toStr);
+
+        LocalDateTime fromDate = parseDate(fromStr);
+        LocalDateTime toDate = parseDate(toStr);
+        Task task = new Event(taskName, fromDate, toDate);
+        taskTracker.addTask(task);
+
+        return List.of("++ " + task + " (" + taskTracker.getSize() + " tasks)");
+    }
+
+    /**
+     * Handles missing task name input in argStr.
+     *
+     * @param argStr The argument string.
+     * @throws MissingArgException If the arg string is null or bank.
+     */
+    private void handleMissingName(String argStr) throws MissingArgException {
         // If the user input something like "event", "event --from [...]" or "event --to [...]"
         if (argStr == null) {
             throw new MissingArgException("First things first, what's this task called? (" + FORMAT_CMD + ")");
         }
+    }
+
+    /**
+     * Handles missing or disorderly the "--from" or "--to" flag(s) in argStr.
+     *
+     * @param argStr The argument string.
+     * @throws MissingArgException If --from or --to flag(s) is/are missing in the argStr, or in the incorrect order.
+     */
+    private void handleMissingFromToFlag(String argStr) throws CmdFormatException, MissingArgException {
         String argStringLow = argStr.trim().toLowerCase();
         if (argStringLow.startsWith("--from") || argStringLow.startsWith("--to")) {
             throw new MissingArgException("First things first, what's this task called? (" + FORMAT_CMD + ")");
@@ -59,32 +94,54 @@ public class EventCmd extends Command {
         if (argStringLow.indexOf("--from") > argStringLow.indexOf("--to")) {
             throw new CmdFormatException("Write --from before --to pls (" + FORMAT_CMD + ")");
         }
+    }
 
+    /**
+     * Extracts the values after each flag and returns it in order.
+     *
+     * @param argStr The argument string.
+     * @return The task name, from flag value, to flag value in that order, as an array .
+     */
+    private String[] extractValuesFromFlags(String argStr) {
+        // Attempts to extract task name, "from" and "to" value arguments in order
         String[] exclNameArgs = argStr.trim().split("--from");
         String taskName = exclNameArgs[0].trim();
         String exclFromArgs = exclNameArgs[1].trim();
+
         String[] exclToArgs = exclFromArgs.split("--to");
         String fromStr = exclToArgs[0].trim();
         String toStr = exclToArgs[1].trim();
-        LocalDateTime fromDate;
-        LocalDateTime toDate;
 
-        // If the arguments following --from or --to is empty
+        return new String[]{taskName, fromStr, toStr};
+    }
+
+    /**
+     * Handles missing date argument(s) after the "--from" or "--to" flags in argStr.
+     *
+     * @param fromStr The fromStr argument.
+     * @param toStr   The toStr argument.
+     * @throws MissingArgException If the date is missing.
+     */
+    private void handleMissingFromToDate(String fromStr, String toStr) throws MissingArgException {
         if (fromStr.isEmpty() || toStr.isEmpty()) {
             throw new MissingArgException("Didja forget to put something at the back of "
                     + "--from or --to? (" + FORMAT_CMD + ")");
         }
+    }
 
+    /**
+     * Converts the date argument into a LocalDateTime object.
+     *
+     * @param byDateStr The date argument.
+     * @return The LocalDateTime object.
+     * @throws CmdFormatException If the date argument is not in the correct format.
+     */
+    private LocalDateTime parseDate(String byDateStr) throws CmdFormatException {
         try {
-            fromDate = LocalDateTime.parse(fromStr, Event.DATETIME_FORMATTER);
-            toDate = LocalDateTime.parse(toStr, Event.DATETIME_FORMATTER);
+            return LocalDateTime.parse(byDateStr, Deadline.DATETIME_FORMATTER);
         } catch (DateTimeParseException exception) {
             throw new CmdFormatException("Follow the date format pls (" + FORMAT_CMD + ")");
         }
-
-        Task task = new Event(taskName, fromDate, toDate);
-        taskTracker.addTask(task);
-        return List.of("++ " + task + " (" + taskTracker.getSize() + " tasks)");
     }
 
 }

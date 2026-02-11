@@ -34,12 +34,8 @@ public class Storage {
      * @throws StorageException If an error occurs while loading the file or instantiating the File Scanner.
      */
     public void init() throws StorageException {
-        try {
-            loadFile();
-            fileReader = new Scanner(file);
-        } catch (FileNotFoundException exception) {
-            throw new StorageException("Unable to find file while loading it into scanner!");
-        }
+        loadFile();
+        loadFileScanner();
     }
 
     /**
@@ -48,17 +44,31 @@ public class Storage {
      * @throws StorageException If an I/O exception occurs while creating the data file.
      */
     private void loadFile() throws StorageException {
-        // If file does not exist, ensure parent folder(s) is/are created, then creates the file
+        // Ensure parent folders exist before creating the file (if it does not exist)
         if (!file.exists()) {
             file.getParentFile().mkdirs();
             try {
-                // If file somehow already exists, fails silently
+                // Note that this fails silently (i.e. file does not exist a few lines before,
+                // but apparently exists now, failing this conditional)
                 if (file.createNewFile()) {
                     System.out.println("Data file not detected, created new file");
                 }
             } catch (IOException exception) {
                 throw new StorageException("An I/O error occured while trying to create the file, exiting...");
             }
+        }
+    }
+
+    /**
+     * Instantiates the file Scanner instance.
+     *
+     * @throws StorageException If the file is not found or cannot be accessed.
+     */
+    private void loadFileScanner() throws StorageException {
+        try {
+            fileReader = new Scanner(file);
+        } catch (FileNotFoundException exception) {
+            throw new StorageException("Unable to find file while loading it into scanner!");
         }
     }
 
@@ -71,7 +81,7 @@ public class Storage {
     public List<Task> loadData() throws StorageException {
         ArrayList<Task> tasks = new ArrayList<>();
 
-        // For each line in the file, parse each line and form the Task
+        // Reads each line in the file and parse them into a Task instance
         int index = 1;
         while (fileReader.hasNext()) {
             String dataStr = fileReader.nextLine();

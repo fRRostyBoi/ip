@@ -6,15 +6,17 @@ import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+import notjippity.exceptions.InvalidArgException;
 import notjippity.exceptions.StorageException;
+import notjippity.utils.Parser;
 
 /**
  * Represents a Deadline task.
  */
 public class Deadline extends Task {
 
-    public static final String DATE_FORMAT = "dd/MM/yyyy HHmm";
-    public static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
+    public static final String FORMAT_DATE = "dd/MM/yyyy HHmm";
+    public static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern(FORMAT_DATE);
 
     private LocalDateTime byDateTime;
 
@@ -59,6 +61,7 @@ public class Deadline extends Task {
 
     @Override
     public String getDataString() {
+        // Format: D||Task_Name||Y/N||ByDate
         return getTypeIcon() + DATA_SEPARATOR + name + DATA_SEPARATOR + (isCompleted ? "Y" : "N") + DATA_SEPARATOR
                 + byDateTime.format(DATETIME_FORMATTER);
     }
@@ -78,36 +81,75 @@ public class Deadline extends Task {
     public static Deadline createTaskFromDataParts(String[] dataParts) throws StorageException {
         assert dataParts != null;
 
+        checkDataParts(dataParts);
+
+        String name = getNamePart(dataParts[1]);
+        boolean isCompleted = getStatusPart(dataParts[2]);
+        LocalDateTime byDate = getDateTimePart(dataParts[3]);
+
+        return new Deadline(name, isCompleted, byDate);
+    }
+
+    /**
+     * Throws an error if dataParts length is invalid.
+     *
+     * @param dataParts The dataParts object.
+     * @throws StorageException If dataParts length != 4.
+     */
+    private static void checkDataParts(String[] dataParts) throws StorageException {
         if (dataParts.length < 4) {
             throw new StorageException("Insufficient arguments; expected 4 but found" + dataParts.length);
         }
+    }
 
-        String name = dataParts[1];
-        String statusStr = dataParts[2];
-        if (name.isEmpty()) {
+    /**
+     * Returns the name string
+     *
+     * @param name The name string.
+     * @throws StorageException If name string is blank.
+     */
+    private static String getNamePart(String name) throws StorageException {
+        if (name.isBlank()) {
             throw new StorageException("Invalid argument #1; expected Task name but found empty string");
         }
+        return name;
+    }
 
+    /**
+     * Parses the status string into a boolean.
+     *
+     * @param statusStr The status string.
+     * @throws StorageException If the status string does not match a boolean.
+     */
+    private static boolean getStatusPart(String statusStr) throws StorageException {
         boolean isCompleted = false;
         if (statusStr.equals("Y")) {
             isCompleted = true;
         } else if (!statusStr.equals("N")) {
             throw new StorageException("Invalid argument #3; expected Y/N but found " + statusStr);
         }
+        return isCompleted;
+    }
 
-        String byDateStr = dataParts[3];
+    /**
+     * Parses the byDate string into a LocalDateTime object.
+     *
+     * @param byDateStr The byDate string.
+     * @throws StorageException If the byDate string does not match the format or is blank.
+     */
+    private static LocalDateTime getDateTimePart(String byDateStr) throws StorageException {
         LocalDateTime byDate;
-        if (byDateStr.isEmpty()) {
-            throw new StorageException("Invalid argument #4; expected ByDate but found empty string");
-        }
+
         try {
-            byDate = LocalDateTime.parse(byDateStr, DATETIME_FORMATTER);
+            byDate = Parser.parseDateTime(byDateStr, DATETIME_FORMATTER);
+        } catch (InvalidArgException exception) {
+            throw new StorageException("Invalid argument #4; expected ByDate but found empty string");
         } catch (DateTimeParseException exception) {
-            throw new StorageException("Invalid argument #4; expected format " + DATE_FORMAT
+            throw new StorageException("Invalid argument #4; expected format " + FORMAT_DATE
                     + " but found " + byDateStr);
         }
 
-        return new Deadline(name, isCompleted, byDate);
+        return byDate;
     }
 
 }

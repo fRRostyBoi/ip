@@ -6,7 +6,9 @@ import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+import notjippity.exceptions.InvalidArgException;
 import notjippity.exceptions.StorageException;
+import notjippity.utils.Parser;
 
 /**
  * Represents an Event task.
@@ -58,7 +60,11 @@ public class Event extends Task {
 
         ChronoLocalDate fromDate = ChronoLocalDate.from(fromDateTime);
         ChronoLocalDate toDate = ChronoLocalDate.from(toDateTime);
-        return date.isEqual(fromDate) || date.isEqual(toDate) || (date.isAfter(fromDate) && date.isBefore(toDate));
+
+        boolean isEqualFromOrTo = date.isEqual(fromDate) || date.isEqual(toDate);
+        boolean isBetweenFromAndTo = (date.isAfter(fromDate) && date.isBefore(toDate));
+
+        return isEqualFromOrTo || isBetweenFromAndTo;
     }
 
     @Override
@@ -68,6 +74,7 @@ public class Event extends Task {
 
     @Override
     public String getDataString() {
+        // Format: D||Task_Name||Y/N||FromDate||ToDate
         return getTypeIcon() + DATA_SEPARATOR + name + DATA_SEPARATOR + (isCompleted ? "Y" : "N") + DATA_SEPARATOR
                 + fromDateTime.format(DATETIME_FORMATTER) + DATA_SEPARATOR
                 + toDateTime.format(DATETIME_FORMATTER);
@@ -89,48 +96,77 @@ public class Event extends Task {
     public static Event createTaskFromDataParts(String[] dataParts) throws StorageException {
         assert dataParts != null;
 
+        checkDataParts(dataParts);
+
+        String name = getNamePart(dataParts[1]);
+        boolean isCompleted = getStatusPart(dataParts[2]);
+        LocalDateTime fromDate = getDateTimePart(dataParts[3], 4);
+        LocalDateTime toDate = getDateTimePart(dataParts[4], 5);
+
+        return new Event(name, isCompleted, fromDate, toDate);
+    }
+
+    /**
+     * Throws an error if dataParts length is invalid.
+     *
+     * @param dataParts The dataParts object.
+     * @throws StorageException If dataParts length != 5.
+     */
+    private static void checkDataParts(String[] dataParts) throws StorageException {
         if (dataParts.length < 5) {
             throw new StorageException("Insufficient arguments; expected 5 but found" + dataParts.length);
         }
+    }
 
-        String name = dataParts[1];
-        String statusStr = dataParts[2];
-        if (name.isEmpty()) {
+    /**
+     * Returns the name string
+     *
+     * @param name The name string.
+     * @throws StorageException If name string is blank.
+     */
+    private static String getNamePart(String name) throws StorageException {
+        if (name.isBlank()) {
             throw new StorageException("Invalid argument #1; expected Task name but found empty string");
         }
+        return name;
+    }
 
+    /**
+     * Parses the status string into a boolean.
+     *
+     * @param statusStr The status string.
+     * @throws StorageException If the status string does not match a boolean.
+     */
+    private static boolean getStatusPart(String statusStr) throws StorageException {
         boolean isCompleted = false;
         if (statusStr.equals("Y")) {
             isCompleted = true;
         } else if (!statusStr.equals("N")) {
             throw new StorageException("Invalid argument #3; expected Y/N but found " + statusStr);
         }
+        return isCompleted;
+    }
 
-        String fromStr = dataParts[3];
-        String toStr = dataParts[4];
-        LocalDateTime fromDate;
-        LocalDateTime toDate;
+    /**
+     * Parses the date string into a LocalDateTime object.
+     *
+     * @param dateStr The date string.
+     * @param argIndex  The date string's argument index.
+     * @throws StorageException If the byDate string does not match the format or is blank.
+     */
+    private static LocalDateTime getDateTimePart(String dateStr, int argIndex) throws StorageException {
+        LocalDateTime dateTime;
 
-        if (fromStr.isEmpty()) {
-            throw new StorageException("Invalid argument #4; expected FromDate but found empty string");
-        }
-        if (toStr.isEmpty()) {
-            throw new StorageException("Invalid argument #5; expected ToDate but found empty string");
-        }
         try {
-            fromDate = LocalDateTime.parse(fromStr, DATETIME_FORMATTER);
+            dateTime = Parser.parseDateTime(dateStr, DATETIME_FORMATTER);
+        } catch (InvalidArgException exception) {
+            throw new StorageException("Invalid argument #" + argIndex + "; expected ByDate but found empty string");
         } catch (DateTimeParseException exception) {
-            throw new StorageException("Invalid argument #4; expected format " + FORMAT_DATE
-                    + " but found " + fromStr);
-        }
-        try {
-            toDate = LocalDateTime.parse(toStr, DATETIME_FORMATTER);
-        } catch (DateTimeParseException exception) {
-            throw new StorageException("Invalid argument #5; expected format " + FORMAT_DATE
-                    + " but found " + fromStr);
+            throw new StorageException("Invalid argument #4" + argIndex + "; expected format " + FORMAT_DATE
+                    + " but found " + dateStr);
         }
 
-        return new Event(name, isCompleted, fromDate, toDate);
+        return dateTime;
     }
 
 }
