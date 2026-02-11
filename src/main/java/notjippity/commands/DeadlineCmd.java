@@ -27,6 +27,8 @@ public class DeadlineCmd extends Command {
     public DeadlineCmd(TaskTracker taskTracker) {
         super("deadline");
         this.taskTracker = taskTracker;
+
+        assert this.taskTracker != null;
     }
 
     /**

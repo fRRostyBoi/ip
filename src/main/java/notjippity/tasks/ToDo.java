@@ -45,6 +45,8 @@ public class ToDo extends Task {
      * @throws StorageException If any data part has an invalid format.
      */
     public static ToDo createTaskFromDataParts(String[] dataParts) throws StorageException {
+        assert dataParts != null;
+
         checkDataParts(dataParts);
 
         String name = getNamePart(dataParts[1]);

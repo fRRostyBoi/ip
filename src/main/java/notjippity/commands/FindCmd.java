@@ -25,6 +25,7 @@ public class FindCmd extends Command {
     public FindCmd(TaskTracker taskTracker) {
         super("find");
         this.taskTracker = taskTracker;
+        assert this.taskTracker != null;
     }
 
     /**

@@ -25,6 +25,7 @@ public class ToggleCmd extends Command {
     public ToggleCmd(TaskTracker taskTracker) {
         super("toggle");
         this.taskTracker = taskTracker;
+        assert this.taskTracker != null;
     }
 
     /**

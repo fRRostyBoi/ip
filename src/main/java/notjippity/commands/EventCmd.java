@@ -29,6 +29,7 @@ public class EventCmd extends Command {
     public EventCmd(TaskTracker taskTracker) {
         super("event");
         this.taskTracker = taskTracker;
+        assert this.taskTracker != null;
     }
 
     /**

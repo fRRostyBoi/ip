@@ -25,6 +25,7 @@ public class DoneCmd extends Command {
     public DoneCmd(TaskTracker taskTracker) {
         super("done");
         this.taskTracker = taskTracker;
+        assert this.taskTracker != null;
     }
 
     /**

@@ -33,6 +33,7 @@ public class ListCmd extends Command {
     public ListCmd(TaskTracker taskTracker) {
         super("list");
         this.taskTracker = taskTracker;
+        assert this.taskTracker != null;
     }
 
     /**

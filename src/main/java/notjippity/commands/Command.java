@@ -18,6 +18,8 @@ public abstract class Command {
      */
     protected Command(String cmdName) {
         this.cmdName = cmdName;
+        boolean isValidCmdName = this.cmdName != null && !this.cmdName.isBlank();
+        assert isValidCmdName;
     }
 
     /**

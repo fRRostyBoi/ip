@@ -24,6 +24,7 @@ public class ToDoCmd extends Command {
     public ToDoCmd(TaskTracker taskTracker) {
         super("todo");
         this.taskTracker = taskTracker;
+        assert this.taskTracker != null;
     }
 
     /**

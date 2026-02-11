@@ -1,6 +1,7 @@
 package notjippity;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,13 +64,19 @@ public class NotJippity extends Application {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/MainWindow.fxml"));
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
-            Image windowIcon = new Image(getClass().getResourceAsStream("/images/window_icon.png"));
+
+            InputStream windowIconStream = getClass().getResourceAsStream("/images/window_icon.png");
+            assert windowIconStream != null;
+
+            Image windowIcon = new Image(windowIconStream);
             stage.getIcons().add(windowIcon);
             stage.setTitle("NotJippity");
 
             stage.setScene(scene);
 
             mainWindow = fxmlLoader.getController();
+            assert mainWindow != null;
+
             mainWindow.setMain(this);
             mainWindow.sendStartupMsg();
         } catch (IOException exception) {
