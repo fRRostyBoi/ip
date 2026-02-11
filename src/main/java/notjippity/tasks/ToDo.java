@@ -44,6 +44,8 @@ public class ToDo extends Task {
      * @throws StorageException If any data part has an invalid format.
      */
     public static ToDo createTaskFromDataParts(String[] dataParts) throws StorageException {
+        assert dataParts != null;
+
         if (dataParts.length < 3) {
             throw new StorageException("Insufficient arguments; expected 3 but found" + dataParts.length);
         }

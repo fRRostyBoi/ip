@@ -20,6 +20,8 @@ public abstract class Task {
      */
     protected Task(String name) {
         this.name = name;
+        boolean isValidName = this.name != null && !this.name.isBlank();
+        assert isValidName;
     }
 
     /**
@@ -29,7 +31,7 @@ public abstract class Task {
      * @param isCompleted Whether the task has been completed.
      */
     protected Task(String name, boolean isCompleted) {
-        this.name = name;
+        this(name);
         this.isCompleted = isCompleted;
     }
 
@@ -97,6 +99,9 @@ public abstract class Task {
      * @return True if the Task name contains the keyword.
      */
     public boolean matchesKeyword(String keyword) {
+        boolean isValidInput = keyword != null && !keyword.isBlank();
+        assert isValidInput;
+
         return name.toLowerCase().contains(keyword.toLowerCase());
     }
 
@@ -109,6 +114,9 @@ public abstract class Task {
      * @throws StorageException If the data string contains an invalid type or data format.
      */
     public static Task createTaskFromString(String dataStr) throws StorageException {
+        boolean isValidInput = dataStr != null && !dataStr.isBlank();
+        assert isValidInput;
+
         String[] dataParts = dataStr.split(DATA_SPLITTER);
         if (dataParts.length == 0) {
             throw new StorageException("Unable to detect Task type");

@@ -16,6 +16,7 @@ public class TaskTracker {
      * @param task The task to be added.
      */
     public void addTask(Task task) {
+        assert task != null;
         tasks.add(task);
     }
 
@@ -25,6 +26,7 @@ public class TaskTracker {
      * @param task The task to remove.
      */
     public void removeTask(Task task) {
+        assert task != null;
         tasks.remove(task);
     }
 
