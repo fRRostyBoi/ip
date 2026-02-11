@@ -1,5 +1,11 @@
 package notjippity.utils;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
+import notjippity.exceptions.InvalidArgException;
+
 /**
  * Contains helper functions for parsing user inputs.
  */
@@ -15,10 +21,12 @@ public class Parser {
         if (input == null) {
             return null;
         }
+
         input = input.trim();
         if (input.isEmpty()) {
             return null;
         }
+
         return input.split(" ")[0];
     }
 
@@ -32,15 +40,40 @@ public class Parser {
         if (input == null) {
             return null;
         }
+
         input = input.trim();
         if (input.isEmpty()) {
             return null;
         }
+
         String argString = input.replaceFirst(getCommand(input), "").trim();
         if (argString.isEmpty()) {
             return null;
         }
+
         return argString;
+    }
+
+    /**
+     * Parses a LocalDateTime from a string. Returns an error message.
+     *
+     * @param dateTimeStr The string to parse from.
+     * @param formatter   The DateTimeFormatter object with the desired format.
+     * @return The LocalDateTime object formed from the string.
+     * @throws InvalidArgException    If the string is blank.
+     * @throws DateTimeParseException If a parsing error occurs.
+     */
+    public static LocalDateTime parseDateTime(String dateTimeStr, DateTimeFormatter formatter)
+            throws InvalidArgException, DateTimeParseException {
+        LocalDateTime dateTime;
+
+        if (dateTimeStr.trim().isEmpty()) {
+            throw new InvalidArgException("Expected LocalDateTime but found empty string");
+        }
+
+        dateTime = LocalDateTime.parse(dateTimeStr, formatter);
+
+        return dateTime;
     }
 
 }

@@ -42,15 +42,38 @@ public class DoneCmd extends Command {
     @Override
     public List<String> execute(String cmdStr, String argStr) throws
             CmdFormatException, MissingArgException, InvalidArgException {
+        handleMissingTask(argStr);
+
+        Task task = checkAndReturnValidTask(argStr);
+        task.complete();
+
+        return List.of(task.toString());
+    }
+
+    /**
+     * Handles missing task input in argStr.
+     *
+     * @param argStr The argument string.
+     * @throws MissingArgException If the arg string is null.
+     */
+    private void handleMissingTask(String argStr) throws MissingArgException {
         if (argStr == null) {
             throw new MissingArgException("Which one? (" + FORMAT_CMD + ")");
         }
+    }
 
-        Task task;
-
+    /**
+     * Returns the valid task, handling the logic for error cases.
+     *
+     * @param argStr The argument string.
+     * @return The Task object.
+     * @throws CmdFormatException  If argStr does not contain a valid integer
+     * @throws InvalidArgException If argStr does not contain a valid index
+     */
+    private Task checkAndReturnValidTask(String argStr) throws CmdFormatException, InvalidArgException {
         try {
             int index = Integer.parseInt(argStr);
-            task = taskTracker.getTask(index - 1);
+            return taskTracker.getTask(index - 1);
         } catch (NumberFormatException exception) {
             throw new CmdFormatException("Idk waddat, enter the index of the task as seen "
                     + "in the \"list\" command instead");
@@ -58,9 +81,6 @@ public class DoneCmd extends Command {
             throw new InvalidArgException("Uhhhh we don't have task #" + argStr
                     + ", maybe check with \"list\" again?");
         }
-
-        task.complete();
-        return List.of(task.toString());
     }
 
 }

@@ -93,28 +93,67 @@ public class MainWindow extends AnchorPane {
         String input = userInput.getText();
         assert input != null;
 
-        dialogContainer.getChildren().add(DialogBox.createUserDialog(input, userIcon));
+        userInput.clear();
 
+        List<String> messages = checkAndReturnValidInput(input);
+
+        addUserDialogBox(input);
+        String botReply = getBotReply(messages);
+        addBotDialogBox(botReply);
+    }
+
+    /**
+     * Returns valid user input cases, handling the logic for error cases.
+     *
+     * @param input The user input
+     */
+    private List<String> checkAndReturnValidInput(String input) {
         try {
             List<String> messages = main.runCmdAndGetResponse(input);
 
-            if (!messages.isEmpty()) {
-                String botResponse = messages.stream()
-                        .reduce((identity, string) -> identity + "\n" + string)
-                        .orElseThrow().replaceFirst("\n", "");
-
-                dialogContainer.getChildren().add(DialogBox.createBotDialog(botResponse, botIcon));
+            if (messages.isEmpty()) {
+                return null;
             }
+
+            return messages;
+        } catch (FatalNjException exception) {
+            System.out.println(exception.getMessage());
+            System.exit(1);
         } catch (NjException exception) {
-            dialogContainer.getChildren().add(DialogBox.createBotDialog(exception.getMessage(), botIcon));
-
-            // If it's a fatal error, exit
-            if (exception instanceof FatalNjException) {
-                System.exit(1);
-            }
+            addUserDialogBox(input);
+            addBotDialogBox(exception.getMessage());
         }
+        return null;
+    }
 
-        userInput.clear();
+    /**
+     * Constructs the bot's reply from the list of response messages.
+     *
+     * @param messages The list of response messages from NotJippity.runCmdAndGetResponse.
+     * @return The reply as a single string, meant for UI.
+     */
+    private String getBotReply(List<String> messages) {
+        return messages.stream()
+                .reduce((identity, string) -> identity + "\n" + string)
+                .orElseThrow().replaceFirst("\n", "");
+    }
+
+    /**
+     * Adds a user dialogue box to the window.
+     *
+     * @param text The text to display.
+     */
+    private void addUserDialogBox(String text) {
+        dialogContainer.getChildren().add(DialogBox.createUserDialog(text, userIcon));
+    }
+
+    /**
+     * Adds a bot dialogue box to the window.
+     *
+     * @param text The text to display.
+     */
+    private void addBotDialogBox(String text) {
+        dialogContainer.getChildren().add(DialogBox.createUserDialog(text, botIcon));
     }
 
 }
