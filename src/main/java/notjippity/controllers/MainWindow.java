@@ -76,11 +76,9 @@ public class MainWindow extends AnchorPane {
             List<String> messages = main.runCmdAndGetResponse(input);
 
             if (!messages.isEmpty()) {
-                StringBuilder builder = new StringBuilder();
-                for (String message : messages) {
-                    builder.append("\n").append(message);
-                }
-                String botResponse = builder.toString().replaceFirst("\n", "");
+                String botResponse = messages.stream()
+                        .reduce((identity, string) -> identity + "\n" + string)
+                        .orElseThrow().replaceFirst("\n", "");
 
                 dialogContainer.getChildren().add(DialogBox.createBotDialog(botResponse, botIcon));
             }

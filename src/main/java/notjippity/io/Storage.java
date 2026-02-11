@@ -98,6 +98,7 @@ public class Storage {
     public void saveData(List<String> dataStrings) throws StorageException {
         try {
             FileWriter fileWriter = new FileWriter(REL_FILE_PATH);
+
             for (int i = 0; i < dataStrings.size(); i++) {
                 if (i > 0) {
                     fileWriter.write(System.lineSeparator());
