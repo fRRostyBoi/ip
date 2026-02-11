@@ -27,6 +27,7 @@ public class Deadline extends Task {
     public Deadline(String name, LocalDateTime byDateTime) {
         super(name);
         this.byDateTime = byDateTime;
+        assert this.byDateTime != null;
     }
 
     /**
@@ -37,8 +38,8 @@ public class Deadline extends Task {
      * @param byDateTime  The deadline for this task.
      */
     private Deadline(String name, boolean isCompleted, LocalDateTime byDateTime) {
-        super(name, isCompleted);
-        this.byDateTime = byDateTime;
+        this(name, byDateTime);
+        this.isCompleted = isCompleted;
     }
 
     /**
@@ -47,6 +48,7 @@ public class Deadline extends Task {
      * @return True if the deadline matches the given date.
      */
     public boolean hasDate(LocalDate date) {
+        assert date != null;
         return date.isEqual(ChronoLocalDate.from(byDateTime));
     }
 
@@ -74,6 +76,8 @@ public class Deadline extends Task {
      * @throws StorageException If any data part has an invalid format.
      */
     public static Deadline createTaskFromDataParts(String[] dataParts) throws StorageException {
+        assert dataParts != null;
+
         if (dataParts.length < 4) {
             throw new StorageException("Insufficient arguments; expected 4 but found" + dataParts.length);
         }

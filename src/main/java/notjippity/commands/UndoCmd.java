@@ -25,6 +25,7 @@ public class UndoCmd extends Command {
     public UndoCmd(TaskTracker taskTracker) {
         super("undo");
         this.taskTracker = taskTracker;
+        assert this.taskTracker != null;
     }
 
     /**

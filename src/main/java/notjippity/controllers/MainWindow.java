@@ -1,5 +1,6 @@
 package notjippity.controllers;
 
+import java.io.InputStream;
 import java.util.List;
 
 import javafx.fxml.FXML;
@@ -29,8 +30,22 @@ public class MainWindow extends AnchorPane {
 
     private NotJippity main;
 
-    private final Image userIcon = new Image(getClass().getResourceAsStream("/images/user_pfp.png"));
-    private final Image botIcon = new Image(getClass().getResourceAsStream("/images/bot_pfp.png"));
+    private final Image userIcon;
+    private final Image botIcon;
+
+    /**
+     * Returns an instance of MainWindow
+     */
+    public MainWindow() {
+        InputStream userIconStream = getClass().getResourceAsStream("/images/user_pfp.png");
+        InputStream botIconStream = getClass().getResourceAsStream("/images/bot_pfp.png");
+
+        assert userIconStream != null;
+        assert botIconStream != null;
+
+        userIcon = new Image(userIconStream);
+        botIcon = new Image(botIconStream);
+    }
 
     /**
      * Injects the main NotJippity instance into this object
@@ -39,6 +54,7 @@ public class MainWindow extends AnchorPane {
      */
     public void setMain(NotJippity main) {
         this.main = main;
+        assert this.main != null;
     }
 
     /**
@@ -46,6 +62,11 @@ public class MainWindow extends AnchorPane {
      */
     @FXML
     public void initialize() {
+        assert scrollPane != null;
+        assert dialogContainer != null;
+        assert userInput != null;
+        assert sendButton != null;
+
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
     }
 
@@ -70,6 +91,8 @@ public class MainWindow extends AnchorPane {
     @FXML
     private void handleUserInput() {
         String input = userInput.getText();
+        assert input != null;
+
         dialogContainer.getChildren().add(DialogBox.createUserDialog(input, userIcon));
 
         try {

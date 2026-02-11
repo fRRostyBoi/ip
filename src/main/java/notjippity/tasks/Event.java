@@ -30,6 +30,9 @@ public class Event extends Task {
         super(name);
         this.fromDateTime = fromDateTime;
         this.toDateTime = toDateTime;
+
+        assert this.fromDateTime != null;
+        assert this.toDateTime != null;
     }
 
     /**
@@ -41,9 +44,8 @@ public class Event extends Task {
      * @param toDateTime   The DateTime from which this event ends.
      */
     private Event(String name, boolean isCompleted, LocalDateTime fromDateTime, LocalDateTime toDateTime) {
-        super(name, isCompleted);
-        this.fromDateTime = fromDateTime;
-        this.toDateTime = toDateTime;
+        this(name, fromDateTime, toDateTime);
+        this.isCompleted = isCompleted;
     }
 
     /**
@@ -52,6 +54,8 @@ public class Event extends Task {
      * @return True if any date in the date range matches.
      */
     public boolean hasDate(LocalDate date) {
+        assert date != null;
+
         ChronoLocalDate fromDate = ChronoLocalDate.from(fromDateTime);
         ChronoLocalDate toDate = ChronoLocalDate.from(toDateTime);
         return date.isEqual(fromDate) || date.isEqual(toDate) || (date.isAfter(fromDate) && date.isBefore(toDate));
@@ -83,6 +87,8 @@ public class Event extends Task {
      * @throws StorageException If any data part has an invalid format.
      */
     public static Event createTaskFromDataParts(String[] dataParts) throws StorageException {
+        assert dataParts != null;
+
         if (dataParts.length < 5) {
             throw new StorageException("Insufficient arguments; expected 5 but found" + dataParts.length);
         }
