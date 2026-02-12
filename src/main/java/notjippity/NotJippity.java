@@ -19,6 +19,7 @@ import notjippity.commands.DoneCmd;
 import notjippity.commands.EventCmd;
 import notjippity.commands.FindCmd;
 import notjippity.commands.ListCmd;
+import notjippity.commands.NoteCmd;
 import notjippity.commands.ToDoCmd;
 import notjippity.commands.ToggleCmd;
 import notjippity.commands.UndoCmd;
@@ -26,7 +27,9 @@ import notjippity.controllers.MainWindow;
 import notjippity.exceptions.FatalNjException;
 import notjippity.exceptions.NjException;
 import notjippity.exceptions.StorageException;
-import notjippity.io.Storage;
+import notjippity.io.NoteStorage;
+import notjippity.io.TaskStorage;
+import notjippity.notes.NoteTracker;
 import notjippity.tasks.TaskTracker;
 import notjippity.utils.Parser;
 
@@ -37,7 +40,9 @@ public class NotJippity extends Application {
 
     private MainWindow mainWindow;
     private TaskTracker taskTracker;
-    private Storage storage;
+    private NoteTracker noteTracker;
+    private TaskStorage taskStorage;
+    private NoteStorage noteStorage;
     private final List<Command> commands = new ArrayList<>();
 
     /**
@@ -90,12 +95,16 @@ public class NotJippity extends Application {
      */
     private void initBot() {
         taskTracker = new TaskTracker();
-        storage = new Storage();
+        noteTracker = new NoteTracker();
+        taskStorage = new TaskStorage();
+        noteStorage = new NoteStorage();
 
         try {
-            storage.init();
+            taskStorage.init();
+            noteStorage.init();
 
-            storage.loadData().forEach(task -> taskTracker.addTask(task));
+            taskStorage.loadTasks().forEach(task -> taskTracker.addTask(task));
+            noteStorage.loadNotes().forEach(note -> noteTracker.addNote(note));
         } catch (FatalNjException exception) {
             System.out.println(exception.getMessage());
             System.exit(1);
@@ -112,6 +121,7 @@ public class NotJippity extends Application {
         commands.add(new UndoCmd(taskTracker));
         commands.add(new DeleteCmd(taskTracker));
         commands.add(new ByeCmd(this));
+        commands.add(new NoteCmd(noteTracker));
     }
 
     /**
@@ -119,7 +129,8 @@ public class NotJippity extends Application {
      */
     public void shutdown() {
         try {
-            storage.saveData(taskTracker.getAllDataStrings());
+            taskStorage.saveTasks(taskTracker.getAllDataStrings());
+            noteStorage.saveNotes(noteTracker.getAllDataStrings());
         } catch (StorageException exception) {
             System.out.println(exception.getMessage());
         }

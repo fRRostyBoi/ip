@@ -9,23 +9,25 @@ import java.util.List;
 import java.util.Scanner;
 
 import notjippity.exceptions.StorageException;
-import notjippity.tasks.Task;
 
 /**
- * Represents the bot's persistent data storage system.
+ * Represents an abstract persistent data storage system.
  */
-public class Storage {
+public abstract class Storage {
 
-    private static final String REL_FILE_PATH = "data/tasks.txt";
+    private final String filePath;
 
     private final File file;
     private Scanner fileReader;
 
     /**
      * Returns a new Storage instance.
+     *
+     * @param filePath The file's file path, relative to the app root
      */
-    public Storage() {
-        file = new File(REL_FILE_PATH);
+    public Storage(String filePath) {
+        this.filePath = filePath;
+        file = new File(filePath);
     }
 
     /**
@@ -73,41 +75,29 @@ public class Storage {
     }
 
     /**
-     * Attempts to parse the task data contained in the file into a collection of Tasks.
+     * Parses the task data contained in the file into a string list.
      *
-     * @return The list of tasks loaded from file.
-     * @throws StorageException If the file content is of the wrong format/corrupted.
+     * @return The list of strings loaded from file.
      */
-    public List<Task> loadData() throws StorageException {
-        ArrayList<Task> tasks = new ArrayList<>();
+    protected List<String> loadData() {
+        ArrayList<String> data = new ArrayList<>();
 
-        // Reads each line in the file and parse them into a Task instance
-        int index = 1;
         while (fileReader.hasNext()) {
-            String dataStr = fileReader.nextLine();
-
-            try {
-                Task task = Task.createTaskFromString(dataStr);
-                tasks.add(task);
-            } catch (StorageException exception) {
-                throw new StorageException("Invalid file format on line " + index + ": " + exception.getMessage());
-            }
-
-            index++;
+            data.add(fileReader.nextLine());
         }
 
-        return tasks;
+        return data;
     }
 
     /**
      * Saves all Tasks to file with the provided List of data strings.
      *
-     * @param dataStrings The list of data strings given by TaskTracker.getAllDataStrings().
+     * @param dataStrings The list of data strings.
      * @throws StorageException If an I/O error occurs during the saving process.
      */
-    public void saveData(List<String> dataStrings) throws StorageException {
+    protected void saveData(List<String> dataStrings) throws StorageException {
         try {
-            FileWriter fileWriter = new FileWriter(REL_FILE_PATH);
+            FileWriter fileWriter = new FileWriter(filePath);
 
             for (int i = 0; i < dataStrings.size(); i++) {
                 if (i > 0) {
