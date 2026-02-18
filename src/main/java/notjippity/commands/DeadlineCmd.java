@@ -3,6 +3,7 @@ package notjippity.commands;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import notjippity.commands.response.CmdOutput;
 import notjippity.exceptions.CmdFormatException;
 import notjippity.exceptions.MissingArgException;
 import notjippity.tasks.Deadline;
@@ -42,7 +43,7 @@ public class DeadlineCmd extends Command {
      * @throws MissingArgException If user input is missing any arguments.
      */
     @Override
-    public List<String> execute(String cmdStr, String argStr) throws CmdFormatException, MissingArgException {
+    public CmdOutput execute(String cmdStr, String argStr) throws CmdFormatException, MissingArgException {
         validateArguments(argStr);
 
         String[] argSets = argStr.trim().split("--by");
@@ -56,7 +57,7 @@ public class DeadlineCmd extends Command {
         Task task = new Deadline(taskName, byDate);
         taskTracker.addTask(task);
 
-        return List.of("++ " + task + " (" + taskTracker.getSize() + " total)");
+        return new CmdOutput(false, List.of("++ " + task + " (" + taskTracker.getSize() + " total)"));
     }
 
     /**

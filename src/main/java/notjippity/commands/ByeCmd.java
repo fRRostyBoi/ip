@@ -1,8 +1,7 @@
 package notjippity.commands;
 
-import java.util.List;
-
 import notjippity.NotJippity;
+import notjippity.commands.response.CmdOutput;
 import notjippity.exceptions.NjException;
 
 /**
@@ -32,9 +31,9 @@ public class ByeCmd extends Command {
      * @throws NjException If any execution error occurs.
      */
     @Override
-    public List<String> execute(String cmdStr, String argStr) throws NjException {
+    public CmdOutput execute(String cmdStr, String argStr) throws NjException {
         notJippity.shutdown();
-        return List.of();
+        return null;
     }
 
 }

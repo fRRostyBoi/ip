@@ -2,6 +2,7 @@ package notjippity.commands;
 
 import java.util.List;
 
+import notjippity.commands.response.CmdOutput;
 import notjippity.exceptions.CmdFormatException;
 import notjippity.exceptions.InvalidArgException;
 import notjippity.exceptions.MissingArgException;
@@ -13,8 +14,6 @@ import notjippity.utils.IndexValidator;
  * Handles "delete" command logic and behaviour.
  */
 public class DeleteCmd extends Command {
-
-    private static final String FORMAT_CMD = "Format: delete <Task Id>";
 
     private TaskTracker taskTracker;
 
@@ -41,13 +40,13 @@ public class DeleteCmd extends Command {
      * @throws InvalidArgException If there are invalid arguments.
      */
     @Override
-    public List<String> execute(String cmdStr, String argStr) throws
+    public CmdOutput execute(String cmdStr, String argStr) throws
             CmdFormatException, MissingArgException, InvalidArgException {
         IndexValidator.validateNotMissing(argStr, "delete");
 
         Task task = IndexValidator.getValidTask(argStr, taskTracker);
         taskTracker.removeTask(task);
 
-        return List.of("-- #" + argStr + " " + task.toString());
+        return new CmdOutput(false, List.of("-- #" + argStr + " " + task.toString()));
     }
 }

@@ -3,6 +3,7 @@ package notjippity.commands;
 import java.util.HashMap;
 import java.util.List;
 
+import notjippity.commands.response.CmdOutput;
 import notjippity.exceptions.MissingArgException;
 import notjippity.tasks.Task;
 import notjippity.tasks.TaskTracker;
@@ -38,15 +39,16 @@ public class FindCmd extends Command {
      * @throws MissingArgException If argStr is null.
      */
     @Override
-    public List<String> execute(String cmdStr, String argStr) throws MissingArgException {
+    public CmdOutput execute(String cmdStr, String argStr) throws MissingArgException {
         CmdValidator.validateNotNull(argStr, "Np, just tell me what to look for (" + FORMAT_CMD + ")");
 
         HashMap<Integer, Task> tasks = getRelevantTasks(argStr);
         if (tasks.isEmpty()) {
-            return List.of("Didn't find anything matching \"" + argStr + "\", sry man");
+            return new CmdOutput(false, List.of("Didn't find anything matching \"" + argStr + "\", sry man"));
         }
 
-        return ListFormatter.formatTaskMap(tasks, "Here's what I found matching \"" + argStr + "\":");
+        return new CmdOutput(false,
+                ListFormatter.formatTaskMap(tasks, "Here's what I found matching \"" + argStr + "\":"));
     }
 
     /**

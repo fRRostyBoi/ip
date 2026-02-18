@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 
+import notjippity.commands.response.CmdOutput;
 import notjippity.exceptions.CmdFormatException;
 import notjippity.exceptions.MissingArgException;
 import notjippity.tasks.Deadline;
@@ -45,7 +46,7 @@ public class ListCmd extends Command {
      * @throws MissingArgException If the user input has (a) missing argument(s).
      */
     @Override
-    public List<String> execute(String cmdStr, String argStr) throws CmdFormatException, MissingArgException {
+    public CmdOutput execute(String cmdStr, String argStr) throws CmdFormatException, MissingArgException {
         if (argStr == null) {
             return executeNormal();
         }
@@ -62,13 +63,13 @@ public class ListCmd extends Command {
      *
      * @return The bot's response.
      */
-    private List<String> executeNormal() {
+    private CmdOutput executeNormal() {
         if (taskTracker.getSize() == 0) {
-            return List.of("Nothing here yet man, wanna add some stuff? (todo, deadline, event)");
+            return new CmdOutput(false, List.of("Nothing here yet man, wanna add some stuff? (todo, deadline, event)"));
         }
 
         HashMap<Integer, Task> tasks = buildTaskMap();
-        return ListFormatter.formatTaskMap(tasks, "Here's what we have so far:");
+        return new CmdOutput(false, ListFormatter.formatTaskMap(tasks, "Here's what we have so far:"));
     }
 
     /**
@@ -79,18 +80,19 @@ public class ListCmd extends Command {
      * @throws CmdFormatException  If the user input has an invalid format.
      * @throws MissingArgException If the user input has (a) missing argument(s).
      */
-    private List<String> executeWithDate(String argStr) throws CmdFormatException, MissingArgException {
+    private CmdOutput executeWithDate(String argStr) throws CmdFormatException, MissingArgException {
         LocalDate date = DateTimeUtils.parseDate(argStr, "--date", FORMAT_DATE, FORMAT_CMD);
 
         HashMap<Integer, Task> tasks = getRelevantTasks(date);
         String formattedInput = DateTimeUtils.formatDate(date, FORMAT_DATE);
 
         if (tasks.isEmpty()) {
-            return List.of("Didn't find anything on " + formattedInput
-                    + " yet, wanna add some stuff? (deadline, event)");
+            return new CmdOutput(false, List.of("Didn't find anything on " + formattedInput
+                    + " yet, wanna add some stuff? (deadline, event)"));
         }
 
-        return ListFormatter.formatTaskMap(tasks, "Here's what we have on " + formattedInput + ":");
+        return new CmdOutput(false,
+                ListFormatter.formatTaskMap(tasks, "Here's what we have on " + formattedInput + ":"));
     }
 
     /**

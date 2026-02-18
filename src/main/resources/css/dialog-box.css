@@ -1,19 +1,26 @@
 .label {
-    -fx-background-color: linear-gradient(to bottom right, #00ffbf, #00ddff);
-    -fx-border-color: #d55e00 #009e73 #cc79a7 #0072b2;
-    -fx-border-width: 2px;
-    -fx-background-radius: 1em 1em 0 1em;
-    -fx-border-radius: 1em 1em 0 1em;
+    -fx-background-color: linear-gradient(to bottom right, #b3411b, #e68302);
+    -fx-background-radius: 1em 0 1em 1em;
+    -fx-border-radius: 1em 0 1em 1em;
+    -fx-padding: 8px 10px;
 }
 
 .reply-label {
-    -fx-background-radius: 1em 1em 1em 0;
-    -fx-border-radius: 1em 1em 1em 0;
+    -fx-background-color: #5e5e5e;
+    -fx-background-radius: 0 1em 1em 1em;
+    -fx-border-radius: 0 1em 1em 1em;
+    -fx-border-radius: 0 1em 1em 1em;
+}
+
+.error-label {
+    -fx-background-color: #cc0202;
 }
 
 #displayPicture {
     /* Shadow effect on image. */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 5, 5);
+    /* Syntax: dropshadow(type, color, radius, spread, offsetX, offsetY) */
+    -fx-effect: dropshadow(gaussian, rgba(100, 100, 100, 0.15), 10, 0.5, 1.5, 2.5);
+    -fx-background-color: #5e5e5e;
 
     /* Change size of image. */
     -fx-scale-x: 1;
