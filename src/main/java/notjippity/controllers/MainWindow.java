@@ -128,7 +128,7 @@ public class MainWindow extends AnchorPane {
      */
     private void handleFatalException(FatalNjException exception) {
         System.out.println(exception.getMessage());
-        System.exit(1);
+        System.exit(0);
     }
 
     /**

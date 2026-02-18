@@ -117,7 +117,7 @@ public class NotJippity extends Application {
             noteStorage.loadNotes().forEach(note -> noteTracker.addNote(note));
         } catch (FatalNjException exception) {
             System.out.println(exception.getMessage());
-            System.exit(1);
+            System.exit(0);
         }
     }
 
