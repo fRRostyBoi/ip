@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import notjippity.NotJippity;
+import notjippity.commands.response.CmdOutput;
 import notjippity.exceptions.FatalNjException;
 import notjippity.exceptions.NjException;
 
@@ -74,14 +75,14 @@ public class MainWindow extends AnchorPane {
      * Displays the bot's welcome dialog box in the dialog container.
      */
     public void sendStartupMsg() {
-        dialogContainer.getChildren().add(DialogBox.createBotDialog("What's up?", botIcon));
+        dialogContainer.getChildren().add(DialogBox.createBotDialog("What's up?", botIcon, false));
     }
 
     /**
      * Displays the bot's welcome dialog box in the dialog container.
      */
     public void sendExitMsg() {
-        dialogContainer.getChildren().add(DialogBox.createBotDialog("Aight cool, cya.", botIcon));
+        dialogContainer.getChildren().add(DialogBox.createBotDialog("Aight cool, cya.", botIcon, false));
     }
 
     /**
@@ -96,10 +97,10 @@ public class MainWindow extends AnchorPane {
         userInput.clear();
         addUserDialogBox(input);
 
-        List<String> messages = getResponseMessages(input);
-        if (messages != null) {
-            String botReply = formatBotReply(messages);
-            addBotDialogBox(botReply);
+        CmdOutput output = getResponseMessages(input);
+        if (output != null) {
+            String botReply = formatBotReply(output.getReply());
+            addBotDialogBox(botReply, output.isError());
         }
     }
 
@@ -107,16 +108,16 @@ public class MainWindow extends AnchorPane {
      * Gets response messages from the bot, handling any exceptions.
      *
      * @param input The user input.
-     * @return The list of response messages, or null if processing failed.
+     * @return The bot's response, or null if a fatal exception occurred.
      */
-    private List<String> getResponseMessages(String input) {
+    private CmdOutput getResponseMessages(String input) {
         try {
             return main.runCmdAndGetResponse(input);
         } catch (FatalNjException exception) {
             handleFatalException(exception);
             return null;
         } catch (NjException exception) {
-            return List.of(exception.getMessage());
+            return new CmdOutput(true, List.of(exception.getMessage()));
         }
     }
 
@@ -152,10 +153,11 @@ public class MainWindow extends AnchorPane {
     /**
      * Adds a bot dialogue box to the window.
      *
-     * @param text The text to display.
+     * @param text    The text to display.
+     * @param isError Whether the dialog box is for an error message.
      */
-    private void addBotDialogBox(String text) {
-        dialogContainer.getChildren().add(DialogBox.createBotDialog(text, botIcon));
+    private void addBotDialogBox(String text, boolean isError) {
+        dialogContainer.getChildren().add(DialogBox.createBotDialog(text, botIcon, isError));
     }
 
 }

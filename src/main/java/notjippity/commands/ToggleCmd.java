@@ -2,6 +2,7 @@ package notjippity.commands;
 
 import java.util.List;
 
+import notjippity.commands.response.CmdOutput;
 import notjippity.exceptions.CmdFormatException;
 import notjippity.exceptions.InvalidArgException;
 import notjippity.exceptions.MissingArgException;
@@ -39,13 +40,13 @@ public class ToggleCmd extends Command {
      * @throws InvalidArgException If there are invalid arguments.
      */
     @Override
-    public List<String> execute(String cmdStr, String argStr) throws
+    public CmdOutput execute(String cmdStr, String argStr) throws
             CmdFormatException, MissingArgException, InvalidArgException {
         IndexValidator.validateNotMissing(argStr, "toggle");
 
         Task task = IndexValidator.getValidTask(argStr, taskTracker);
         task.toggleComplete();
 
-        return List.of(task.toString());
+        return new CmdOutput(false, List.of(task.toString()));
     }
 }

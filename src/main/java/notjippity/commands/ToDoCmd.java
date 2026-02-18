@@ -2,6 +2,7 @@ package notjippity.commands;
 
 import java.util.List;
 
+import notjippity.commands.response.CmdOutput;
 import notjippity.exceptions.MissingArgException;
 import notjippity.tasks.Task;
 import notjippity.tasks.TaskTracker;
@@ -35,13 +36,13 @@ public class ToDoCmd extends Command {
      * @throws MissingArgException If user input is missing any arguments.
      */
     @Override
-    public List<String> execute(String cmdStr, String argStr) throws MissingArgException {
+    public CmdOutput execute(String cmdStr, String argStr) throws MissingArgException {
         validateArguments(argStr);
 
         Task task = new ToDo(argStr);
         taskTracker.addTask(task);
 
-        return List.of("++ " + task + " (" + taskTracker.getSize() + " total)");
+        return new CmdOutput(false, List.of("++ " + task + " (" + taskTracker.getSize() + " total)"));
     }
 
     /**

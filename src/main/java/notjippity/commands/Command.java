@@ -1,7 +1,6 @@
 package notjippity.commands;
 
-import java.util.List;
-
+import notjippity.commands.response.CmdOutput;
 import notjippity.exceptions.NjException;
 
 /**
@@ -30,7 +29,7 @@ public abstract class Command {
      * @return The bot's response.
      * @throws NjException If any execution error occurs.
      */
-    public abstract List<String> execute(String cmdStr, String argStr) throws NjException;
+    public abstract CmdOutput execute(String cmdStr, String argStr) throws NjException;
 
     /**
      * Returns the string that triggers this Command.

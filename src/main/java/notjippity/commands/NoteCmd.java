@@ -3,6 +3,7 @@ package notjippity.commands;
 import java.time.LocalDate;
 import java.util.List;
 
+import notjippity.commands.response.CmdOutput;
 import notjippity.exceptions.CmdFormatException;
 import notjippity.exceptions.InvalidArgException;
 import notjippity.exceptions.MissingArgException;
@@ -44,7 +45,7 @@ public class NoteCmd extends Command {
      * @throws InvalidArgException If there are invalid arguments.
      */
     @Override
-    public List<String> execute(String cmdStr, String argStr) throws NjException {
+    public CmdOutput execute(String cmdStr, String argStr) throws NjException {
         if (argStr == null || argStr.isBlank()) {
             return executeList();
         }
@@ -65,12 +66,13 @@ public class NoteCmd extends Command {
      *
      * @return The bot's response
      */
-    private List<String> executeList() {
+    private CmdOutput executeList() {
         if (noteTracker.getSize() == 0) {
-            return List.of("No notes found, wanna add some?");
+            return new CmdOutput(false, List.of("No notes found, wanna add some?"));
         }
 
-        return ListFormatter.formatNoteList(noteTracker.getNotes(), "Here's what you noted down so far:");
+        return new CmdOutput(false, ListFormatter.formatNoteList(
+                noteTracker.getNotes(), "Here's what you noted down so far:"));
     }
 
     /**
@@ -81,7 +83,7 @@ public class NoteCmd extends Command {
      * @return The response after creating the note.
      * @throws MissingArgException If the content provided is empty.
      */
-    private List<String> executeAdd(String remainingArgs) throws MissingArgException {
+    private CmdOutput executeAdd(String remainingArgs) throws MissingArgException {
         if (remainingArgs.isBlank()) {
             throw new MissingArgException("Uh yeah, what's the note you want me to remember? (" + FORMAT_CMD + ")");
         }
@@ -89,7 +91,7 @@ public class NoteCmd extends Command {
         Note note = new Note(LocalDate.now(), remainingArgs);
         noteTracker.addNote(note);
 
-        return List.of("++ " + note + " (" + noteTracker.getSize() + " total)");
+        return new CmdOutput(false, List.of("++ " + note + " (" + noteTracker.getSize() + " total)"));
     }
 
     /**
@@ -101,7 +103,7 @@ public class NoteCmd extends Command {
      * @throws InvalidArgException If the input is not an integer, or there is no note with that index.
      * @throws CmdFormatException  If the command format is invalid.
      */
-    private List<String> executeRemove(String remainingArgs) throws
+    private CmdOutput executeRemove(String remainingArgs) throws
             MissingArgException, InvalidArgException, CmdFormatException {
         if (remainingArgs.isBlank()) {
             throw new MissingArgException("You gotta give me a number, man. (" + FORMAT_CMD + ")");
@@ -110,6 +112,6 @@ public class NoteCmd extends Command {
         Note note = IndexValidator.getValidNote(remainingArgs, noteTracker);
         noteTracker.removeNote(note);
 
-        return List.of("-- #" + remainingArgs + " " + note.toString());
+        return new CmdOutput(false, List.of("-- #" + remainingArgs + " " + note.toString()));
     }
 }

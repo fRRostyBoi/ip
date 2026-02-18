@@ -23,6 +23,7 @@ import notjippity.commands.NoteCmd;
 import notjippity.commands.ToDoCmd;
 import notjippity.commands.ToggleCmd;
 import notjippity.commands.UndoCmd;
+import notjippity.commands.response.CmdOutput;
 import notjippity.controllers.MainWindow;
 import notjippity.exceptions.FatalNjException;
 import notjippity.exceptions.NjException;
@@ -69,7 +70,7 @@ public class NotJippity extends Application {
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
 
-            InputStream windowIconStream = getClass().getResourceAsStream("/images/window_icon.png");
+            InputStream windowIconStream = getClass().getResourceAsStream("/images/bot_pfp.png");
             assert windowIconStream != null;
 
             Image windowIcon = new Image(windowIconStream);
@@ -159,7 +160,7 @@ public class NotJippity extends Application {
      * @return The response from running the command.
      * @throws NjException If running the command returns an error.
      */
-    public List<String> runCmdAndGetResponse(String input) throws NjException {
+    public CmdOutput runCmdAndGetResponse(String input) throws NjException {
         String cmdString = UserInputParser.getCommand(input);
         String argString = UserInputParser.getArgString(input);
 
@@ -168,7 +169,7 @@ public class NotJippity extends Application {
             return matchedCommand.execute(cmdString, argString);
         }
 
-        return List.of("Idk what's \"" + cmdString + "\". Typo maybe?");
+        return new CmdOutput(true, List.of("Idk what's \"" + cmdString + "\". Typo maybe?"));
     }
 
     /**
