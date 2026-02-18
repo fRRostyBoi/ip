@@ -6,7 +6,7 @@ import java.time.format.DateTimeParseException;
 
 import notjippity.exceptions.InvalidArgException;
 import notjippity.exceptions.StorageException;
-import notjippity.utils.Parser;
+import notjippity.utils.UserInputParser;
 
 /**
  * Represents a Note.
@@ -24,15 +24,14 @@ public class Note {
     private final String content;
 
     /**
-     * Returns a new Note instance
+     * Returns a new Note instance.
      *
-     * @param dateAdded The creation date
-     * @param content   The note contents
+     * @param dateAdded The creation date.
+     * @param content   The note contents.
      */
     public Note(LocalDate dateAdded, String content) {
-        boolean isValidContent = content != null && !content.isBlank();
-        boolean isDateValid = dateAdded != null;
-        assert isValidContent && isDateValid;
+        assert dateAdded != null;
+        assert content != null && !content.isBlank();
 
         this.dateAdded = dateAdded;
         this.content = content;
@@ -83,12 +82,13 @@ public class Note {
      * Extracts the data parts necessary to form the string from the given data string.
      * Also checks for any blank contents for any data part, throwing an error if so.
      *
-     * @param dataStr The data string
-     * @return The data part array, in the order specified by Note.getDataString()
-     * @throws StorageException If any data part is blank
+     * @param dataStr The data string.
+     * @return The data part array, in the order specified by Note.getDataString().
+     * @throws StorageException If any data part is blank.
      */
     private static String[] extractDataParts(String dataStr) throws StorageException {
         String[] dataParts = dataStr.split(DATA_SPLITTER);
+
         if (dataParts.length != 2) {
             throw new StorageException("Invalid Note data string format");
         }
@@ -96,35 +96,41 @@ public class Note {
         String dateAddedStr = dataParts[0];
         String content = dataParts[1];
 
-        assert dateAddedStr != null && content != null;
-
-        boolean hasContent = !dateAddedStr.isBlank() && !content.isBlank();
-        if (!hasContent) {
-            throw new StorageException("Invalid Note data string parts: Date Added or Content is blank");
-        }
-
+        validateDataPartsNotBlank(dateAddedStr, content);
         return dataParts;
     }
 
     /**
-     * Parses the date string into a LocalDateTime object.
+     * Validates that date and content strings are not blank.
+     *
+     * @param dateAddedStr The date added string.
+     * @param content      The content string.
+     * @throws StorageException If either string is blank.
+     */
+    private static void validateDataPartsNotBlank(String dateAddedStr, String content) throws StorageException {
+        boolean hasValidContent = !dateAddedStr.isBlank() && !content.isBlank();
+
+        if (!hasValidContent) {
+            throw new StorageException("Invalid Note data string parts: Date Added or Content is blank");
+        }
+    }
+
+    /**
+     * Parses the date string into a LocalDate object.
      *
      * @param dateStr The date string.
+     * @return The parsed LocalDate.
      * @throws StorageException If the byDate string does not match the format or is blank.
      */
     private static LocalDate getDateTimePart(String dateStr) throws StorageException {
-        LocalDate date;
-
         try {
-            date = Parser.parseDate(dateStr, DATETIME_FORMATTER);
+            return UserInputParser.parseDate(dateStr, DATETIME_FORMATTER);
         } catch (InvalidArgException exception) {
             throw new StorageException("Invalid argument #1; expected DateAdded but found empty string");
         } catch (DateTimeParseException exception) {
             throw new StorageException("Invalid argument #1; expected format " + FORMAT_DATE
                     + " but found " + dateStr);
         }
-
-        return date;
     }
 
 }

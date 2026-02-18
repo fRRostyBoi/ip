@@ -23,7 +23,7 @@ public abstract class Storage {
     /**
      * Returns a new Storage instance.
      *
-     * @param filePath The file's file path, relative to the app root
+     * @param filePath The file's file path, relative to the app root.
      */
     public Storage(String filePath) {
         this.filePath = filePath;
@@ -46,18 +46,26 @@ public abstract class Storage {
      * @throws StorageException If an I/O exception occurs while creating the data file.
      */
     private void loadFile() throws StorageException {
-        // Ensure parent folders exist before creating the file (if it does not exist)
-        if (!file.exists()) {
-            file.getParentFile().mkdirs();
-            try {
-                // Note that this fails silently (i.e. file does not exist a few lines before,
-                // but apparently exists now, failing this conditional)
-                if (file.createNewFile()) {
-                    System.out.println("Data file not detected, created new file");
-                }
-            } catch (IOException exception) {
-                throw new StorageException("An I/O error occured while trying to create the file, exiting...");
+        if (file.exists()) {
+            return;
+        }
+
+        file.getParentFile().mkdirs();
+        createNewFile();
+    }
+
+    /**
+     * Creates a new file, printing a message on success.
+     *
+     * @throws StorageException If an I/O error occurs.
+     */
+    private void createNewFile() throws StorageException {
+        try {
+            if (file.createNewFile()) {
+                System.out.println("Data file not detected, created new file");
             }
+        } catch (IOException exception) {
+            throw new StorageException("An I/O error occurred while trying to create the file, exiting...");
         }
     }
 
@@ -98,17 +106,26 @@ public abstract class Storage {
     protected void saveData(List<String> dataStrings) throws StorageException {
         try {
             FileWriter fileWriter = new FileWriter(filePath);
-
-            for (int i = 0; i < dataStrings.size(); i++) {
-                if (i > 0) {
-                    fileWriter.write(System.lineSeparator());
-                }
-                fileWriter.write(dataStrings.get(i));
-            }
-
+            writeDataStrings(fileWriter, dataStrings);
             fileWriter.close();
         } catch (IOException exception) {
             throw new StorageException("An error occurred while saving data to file");
+        }
+    }
+
+    /**
+     * Writes data strings to the file writer.
+     *
+     * @param fileWriter  The file writer.
+     * @param dataStrings The list of data strings to write.
+     * @throws IOException If an I/O error occurs.
+     */
+    private void writeDataStrings(FileWriter fileWriter, List<String> dataStrings) throws IOException {
+        for (int i = 0; i < dataStrings.size(); i++) {
+            if (i > 0) {
+                fileWriter.write(System.lineSeparator());
+            }
+            fileWriter.write(dataStrings.get(i));
         }
     }
 

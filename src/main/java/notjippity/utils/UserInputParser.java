@@ -10,7 +10,7 @@ import notjippity.exceptions.InvalidArgException;
 /**
  * Contains helper functions for parsing user inputs.
  */
-public class Parser {
+public class UserInputParser {
 
     /**
      * Returns only the command portion of the user input.
@@ -23,12 +23,12 @@ public class Parser {
             return null;
         }
 
-        input = input.trim();
-        if (input.isEmpty()) {
+        String trimmedInput = input.trim();
+        if (trimmedInput.isEmpty()) {
             return null;
         }
 
-        return input.split(" ")[0];
+        return trimmedInput.split(" ")[0];
     }
 
     /**
@@ -42,12 +42,14 @@ public class Parser {
             return null;
         }
 
-        input = input.trim();
-        if (input.isEmpty()) {
+        String trimmedInput = input.trim();
+        if (trimmedInput.isEmpty()) {
             return null;
         }
 
-        String argString = input.replaceFirst(getCommand(input), "").trim();
+        String command = getCommand(input);
+        String argString = trimmedInput.replaceFirst(command, "").trim();
+
         if (argString.isEmpty()) {
             return null;
         }
@@ -66,15 +68,11 @@ public class Parser {
      */
     public static LocalDate parseDate(String dateTimeStr, DateTimeFormatter formatter)
             throws InvalidArgException, DateTimeParseException {
-        LocalDate dateTime;
-
         if (dateTimeStr.trim().isEmpty()) {
-            throw new InvalidArgException("Expected LocalDateTime but found empty string");
+            throw new InvalidArgException("Expected LocalDate but found empty string");
         }
 
-        dateTime = LocalDate.parse(dateTimeStr, formatter);
-
-        return dateTime;
+        return LocalDate.parse(dateTimeStr, formatter);
     }
 
     /**
@@ -88,15 +86,11 @@ public class Parser {
      */
     public static LocalDateTime parseDateTime(String dateTimeStr, DateTimeFormatter formatter)
             throws InvalidArgException, DateTimeParseException {
-        LocalDateTime dateTime;
-
         if (dateTimeStr.trim().isEmpty()) {
             throw new InvalidArgException("Expected LocalDateTime but found empty string");
         }
 
-        dateTime = LocalDateTime.parse(dateTimeStr, formatter);
-
-        return dateTime;
+        return LocalDateTime.parse(dateTimeStr, formatter);
     }
 
 }

@@ -1,10 +1,10 @@
 package notjippity.io;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import notjippity.exceptions.StorageException;
 import notjippity.notes.Note;
+import notjippity.utils.StorageDataLoader;
 
 /**
  * Represents the bot's persistent data storage system for notes.
@@ -27,19 +27,7 @@ public class NoteStorage extends Storage {
      * @throws StorageException If the file content is of the wrong format/corrupted.
      */
     public List<Note> loadNotes() throws StorageException {
-        ArrayList<Note> notes = new ArrayList<>();
-
-        int index = 1;
-        try {
-            for (String dataString : loadData()) {
-                notes.add(Note.createNoteFromString(dataString));
-                index++;
-            }
-        } catch (StorageException exception) {
-            throw new StorageException("Invalid file format on line " + index + ": " + exception.getMessage());
-        }
-
-        return notes;
+        return StorageDataLoader.loadDataWithParser(loadData(), Note::createNoteFromString);
     }
 
     /**

@@ -34,7 +34,7 @@ public class MainWindow extends AnchorPane {
     private final Image botIcon;
 
     /**
-     * Returns an instance of MainWindow
+     * Returns an instance of MainWindow.
      */
     public MainWindow() {
         InputStream userIconStream = getClass().getResourceAsStream("/images/user_pfp.png");
@@ -48,9 +48,9 @@ public class MainWindow extends AnchorPane {
     }
 
     /**
-     * Injects the main NotJippity instance into this object
+     * Injects the main NotJippity instance into this object.
      *
-     * @param main The main NotJippity instance
+     * @param main The main NotJippity instance.
      */
     public void setMain(NotJippity main) {
         this.main = main;
@@ -96,32 +96,38 @@ public class MainWindow extends AnchorPane {
         userInput.clear();
         addUserDialogBox(input);
 
-        List<String> messages = checkAndReturnValidInput(input);
-        String botReply = getBotReply(messages);
-        addBotDialogBox(botReply);
+        List<String> messages = getResponseMessages(input);
+        if (messages != null) {
+            String botReply = formatBotReply(messages);
+            addBotDialogBox(botReply);
+        }
     }
 
     /**
-     * Returns valid user input cases, handling the logic for error cases.
+     * Gets response messages from the bot, handling any exceptions.
      *
-     * @param input The user input
+     * @param input The user input.
+     * @return The list of response messages, or null if processing failed.
      */
-    private List<String> checkAndReturnValidInput(String input) {
+    private List<String> getResponseMessages(String input) {
         try {
-            List<String> messages = main.runCmdAndGetResponse(input);
-
-            if (messages.isEmpty()) {
-                return null;
-            }
-
-            return messages;
+            return main.runCmdAndGetResponse(input);
         } catch (FatalNjException exception) {
-            System.out.println(exception.getMessage());
-            System.exit(1);
+            handleFatalException(exception);
+            return null;
         } catch (NjException exception) {
             return List.of(exception.getMessage());
         }
-        return null;
+    }
+
+    /**
+     * Handles fatal exceptions by printing and exiting.
+     *
+     * @param exception The fatal exception.
+     */
+    private void handleFatalException(FatalNjException exception) {
+        System.out.println(exception.getMessage());
+        System.exit(1);
     }
 
     /**
@@ -130,10 +136,8 @@ public class MainWindow extends AnchorPane {
      * @param messages The list of response messages from NotJippity.runCmdAndGetResponse.
      * @return The reply as a single string, meant for UI.
      */
-    private String getBotReply(List<String> messages) {
-        return messages.stream()
-                .reduce((identity, string) -> "\n" + identity + "\n" + string)
-                .orElseThrow().replaceFirst("\n", "");
+    private String formatBotReply(List<String> messages) {
+        return String.join("\n", messages);
     }
 
     /**

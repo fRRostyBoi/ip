@@ -1,7 +1,6 @@
 package notjippity.commands;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import notjippity.exceptions.CmdFormatException;
@@ -10,6 +9,8 @@ import notjippity.exceptions.MissingArgException;
 import notjippity.exceptions.NjException;
 import notjippity.notes.Note;
 import notjippity.notes.NoteTracker;
+import notjippity.utils.IndexValidator;
+import notjippity.utils.ListFormatter;
 
 /**
  * Handles "notes" command logic and behaviour.
@@ -48,10 +49,9 @@ public class NoteCmd extends Command {
             return executeList();
         }
 
-        String firstArg = argStr.trim().split(" ")[0];
-        String remainderArgs = argStr.replaceFirst(firstArg, "").trim();
-
-        System.out.println(firstArg + " " + remainderArgs);
+        String[] parts = argStr.trim().split(" ", 2);
+        String firstArg = parts[0];
+        String remainderArgs = parts.length > 1 ? parts[1].trim() : "";
 
         return switch (firstArg.toLowerCase()) {
         case "add" -> executeAdd(remainderArgs);
@@ -70,7 +70,7 @@ public class NoteCmd extends Command {
             return List.of("No notes found, wanna add some?");
         }
 
-        return convertToFoundList(noteTracker.getNotes());
+        return ListFormatter.formatNoteList(noteTracker.getNotes(), "Here's what you noted down so far:");
     }
 
     /**
@@ -95,71 +95,21 @@ public class NoteCmd extends Command {
     /**
      * Removes a note with the specified index.
      *
-     * @param remainingArgs The note's index as listed in the "notes" command
-     * @return The response message after deleting the note
+     * @param remainingArgs The note's index as listed in the "notes" command.
+     * @return The response message after deleting the note.
      * @throws MissingArgException If the input doesn't exist.
      * @throws InvalidArgException If the input is not an integer, or there is no note with that index.
-     * @throws CmdFormatException  If the
+     * @throws CmdFormatException  If the command format is invalid.
      */
-    private List<String> executeRemove(String remainingArgs)
-            throws MissingArgException, InvalidArgException, CmdFormatException {
+    private List<String> executeRemove(String remainingArgs) throws
+            MissingArgException, InvalidArgException, CmdFormatException {
         if (remainingArgs.isBlank()) {
             throw new MissingArgException("You gotta give me a number, man. (" + FORMAT_CMD + ")");
         }
 
-        Note note = checkAndReturnValidTask(remainingArgs);
+        Note note = IndexValidator.getValidNote(remainingArgs, noteTracker);
         noteTracker.removeNote(note);
 
         return List.of("-- #" + remainingArgs + " " + note.toString());
     }
-
-    /**
-     * Converts the list of notes into a list of response messages.
-     *
-     * @param notes The list of notes.
-     * @return A list of strings representing the notes.
-     */
-    private List<String> convertToFoundList(List<Note> notes) {
-        List<String> response = new ArrayList<>();
-        response.add("Here's what you noted down so far:");
-
-        // For indices with lesser digits, add buffer spaces to match highest number of digits.
-        // Ensures all strings that come after the indices are flush.
-        int lastAddedIndex = 1;
-        int maxDigits = 1 + (int) Math.floor(Math.log10(lastAddedIndex));
-        for (Note note : notes) {
-            int curDigits = 1 + (int) Math.floor(Math.log10(lastAddedIndex));
-
-            StringBuilder indexStr = new StringBuilder(lastAddedIndex++ + ". ");
-            for (int i = 0; i < maxDigits - curDigits; i++) {
-                indexStr.append(" ");
-            }
-
-            response.add(indexStr.toString() + note);
-        }
-
-        return response;
-    }
-
-    /**
-     * Returns the valid note, handling the logic for error cases.
-     *
-     * @param argStr The argument string.
-     * @return The Note object.
-     * @throws CmdFormatException  If argStr does not contain a valid integer
-     * @throws InvalidArgException If argStr does not contain a valid index
-     */
-    private Note checkAndReturnValidTask(String argStr) throws CmdFormatException, InvalidArgException {
-        try {
-            int index = Integer.parseInt(argStr);
-            return noteTracker.getNote(index - 1);
-        } catch (NumberFormatException exception) {
-            throw new CmdFormatException("Idk waddat, enter the index of the note as seen "
-                    + "in the \"note\" command instead");
-        } catch (IndexOutOfBoundsException exception) {
-            throw new InvalidArgException("Uhhhh we don't have note #" + argStr
-                    + ", maybe check with \"note\" again?");
-        }
-    }
-
 }

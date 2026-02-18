@@ -31,7 +31,7 @@ import notjippity.io.NoteStorage;
 import notjippity.io.TaskStorage;
 import notjippity.notes.NoteTracker;
 import notjippity.tasks.TaskTracker;
-import notjippity.utils.Parser;
+import notjippity.utils.UserInputParser;
 
 /**
  * Represents the NotJippity bot and handles all overarching interactions.
@@ -61,7 +61,7 @@ public class NotJippity extends Application {
      * Assembles the stage to be ready for showing.
      * If any errors occur, the bot will terminate immediately.
      *
-     * @param stage The stage to assemble to UI onto
+     * @param stage The stage to assemble to UI onto.
      */
     private void assembleUiOntoStage(Stage stage) {
         try {
@@ -91,7 +91,7 @@ public class NotJippity extends Application {
 
     /**
      * Initialises the bot's controllers. Must be called before performing any further control logic.
-     * If any errors occurs, the bot will terminate immediately.
+     * If any errors occur, the bot will terminate immediately.
      */
     private void initBot() {
         taskTracker = new TaskTracker();
@@ -99,6 +99,15 @@ public class NotJippity extends Application {
         taskStorage = new TaskStorage();
         noteStorage = new NoteStorage();
 
+        loadStorageData();
+        registerCommands();
+    }
+
+    /**
+     * Loads task and note data from storage.
+     * If any errors occur, the bot will terminate immediately.
+     */
+    private void loadStorageData() {
         try {
             taskStorage.init();
             noteStorage.init();
@@ -109,8 +118,12 @@ public class NotJippity extends Application {
             System.out.println(exception.getMessage());
             System.exit(1);
         }
+    }
 
-        // Register all the command handlers
+    /**
+     * Registers all command handlers.
+     */
+    private void registerCommands() {
         commands.add(new ToDoCmd(taskTracker));
         commands.add(new DeadlineCmd(taskTracker));
         commands.add(new EventCmd(taskTracker));
@@ -147,18 +160,30 @@ public class NotJippity extends Application {
      * @throws NjException If running the command returns an error.
      */
     public List<String> runCmdAndGetResponse(String input) throws NjException {
-        String cmdString = Parser.getCommand(input);
-        String argString = Parser.getArgString(input);
+        String cmdString = UserInputParser.getCommand(input);
+        String argString = UserInputParser.getArgString(input);
 
-        // Find and run command based on user input
-        for (Command command : commands) {
-            if (command.getCmdName().equalsIgnoreCase(cmdString)) {
-                return command.execute(cmdString, argString);
-            }
+        Command matchedCommand = findMatchingCommand(cmdString);
+        if (matchedCommand != null) {
+            return matchedCommand.execute(cmdString, argString);
         }
 
-        // If a match isn't found, send an error message
         return List.of("Idk what's \"" + cmdString + "\". Typo maybe?");
+    }
+
+    /**
+     * Finds a command that matches the given command string.
+     *
+     * @param cmdString The command string to match.
+     * @return The matching command, or null if not found.
+     */
+    private Command findMatchingCommand(String cmdString) {
+        for (Command command : commands) {
+            if (command.getCmdName().equalsIgnoreCase(cmdString)) {
+                return command;
+            }
+        }
+        return null;
     }
 
 }

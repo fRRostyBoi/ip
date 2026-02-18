@@ -1,10 +1,10 @@
 package notjippity.io;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import notjippity.exceptions.StorageException;
 import notjippity.tasks.Task;
+import notjippity.utils.StorageDataLoader;
 
 /**
  * Represents the bot's persistent data storage system for tasks.
@@ -27,19 +27,7 @@ public class TaskStorage extends Storage {
      * @throws StorageException If the file content is of the wrong format/corrupted.
      */
     public List<Task> loadTasks() throws StorageException {
-        ArrayList<Task> tasks = new ArrayList<>();
-
-        int index = 1;
-        try {
-            for (String dataString : loadData()) {
-                tasks.add(Task.createTaskFromString(dataString));
-                index++;
-            }
-        } catch (StorageException exception) {
-            throw new StorageException("Invalid file format on line " + index + ": " + exception.getMessage());
-        }
-
-        return tasks;
+        return StorageDataLoader.loadDataWithParser(loadData(), Task::createTaskFromString);
     }
 
     /**

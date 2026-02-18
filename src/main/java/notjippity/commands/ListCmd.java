@@ -1,9 +1,6 @@
 package notjippity.commands;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,6 +10,8 @@ import notjippity.tasks.Deadline;
 import notjippity.tasks.Event;
 import notjippity.tasks.Task;
 import notjippity.tasks.TaskTracker;
+import notjippity.utils.DateTimeUtils;
+import notjippity.utils.ListFormatter;
 
 /**
  * Handles "list" command logic and behaviour.
@@ -21,7 +20,6 @@ public class ListCmd extends Command {
 
     private static final String FORMAT_DATE = "dd/MM/yyyy";
     private static final String FORMAT_CMD = "Format: list [--date <" + FORMAT_DATE + ">]";
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(FORMAT_DATE);
 
     private TaskTracker taskTracker;
 
@@ -50,11 +48,13 @@ public class ListCmd extends Command {
     public List<String> execute(String cmdStr, String argStr) throws CmdFormatException, MissingArgException {
         if (argStr == null) {
             return executeNormal();
-        } else if (argStr.toLowerCase().startsWith("--date")) {
-            return executeWithDate(argStr);
-        } else {
-            throw new CmdFormatException("Uhhh idk waddat (" + FORMAT_CMD + ")");
         }
+
+        if (argStr.toLowerCase().startsWith("--date")) {
+            return executeWithDate(argStr);
+        }
+
+        throw new CmdFormatException("Uhhh idk waddat (" + FORMAT_CMD + ")");
     }
 
     /**
@@ -67,15 +67,8 @@ public class ListCmd extends Command {
             return List.of("Nothing here yet man, wanna add some stuff? (todo, deadline, event)");
         }
 
-        HashMap<Integer, Task> tasks = new HashMap<>();
-
-        int i = 1;
-        for (Task task : taskTracker.getTasks()) {
-            tasks.put(i, task);
-            i++;
-        }
-
-        return convertToFoundList(tasks, "Here's what we have so far:");
+        HashMap<Integer, Task> tasks = buildTaskMap();
+        return ListFormatter.formatTaskMap(tasks, "Here's what we have so far:");
     }
 
     /**
@@ -87,41 +80,31 @@ public class ListCmd extends Command {
      * @throws MissingArgException If the user input has (a) missing argument(s).
      */
     private List<String> executeWithDate(String argStr) throws CmdFormatException, MissingArgException {
-        LocalDate date = parseDate(argStr);
+        LocalDate date = DateTimeUtils.parseDate(argStr, "--date", FORMAT_DATE, FORMAT_CMD);
 
-        // Filter out the tasks which are relevant to the given date, along with the actual list indices
         HashMap<Integer, Task> tasks = getRelevantTasks(date);
-        String formattedInput = date.format(DATE_FORMATTER);
+        String formattedInput = DateTimeUtils.formatDate(date, FORMAT_DATE);
+
         if (tasks.isEmpty()) {
             return List.of("Didn't find anything on " + formattedInput
                     + " yet, wanna add some stuff? (deadline, event)");
         }
 
-        return convertToFoundList(tasks, "Here's what we have on " + formattedInput + ":");
+        return ListFormatter.formatTaskMap(tasks, "Here's what we have on " + formattedInput + ":");
     }
 
     /**
-     * Parses the date argument into a LocalDate object.
+     * Builds a map of tasks with their corresponding list indices.
      *
-     * @param argStr The argument string.
-     * @return The LocalDate object parsed from the provided argument.
-     * @throws MissingArgException If the arg string is null.
+     * @return A map of Task Indices to Tasks.
      */
-    private LocalDate parseDate(String argStr) throws CmdFormatException, MissingArgException {
-        if (argStr == null) {
-            throw new MissingArgException("On which date? (" + FORMAT_CMD + ")");
+    private HashMap<Integer, Task> buildTaskMap() {
+        HashMap<Integer, Task> tasks = new HashMap<>();
+        int index = 1;
+        for (Task task : taskTracker.getTasks()) {
+            tasks.put(index++, task);
         }
-
-        String dateStr = argStr.replaceFirst("--date", "").trim();
-        if (dateStr.isEmpty()) {
-            throw new MissingArgException("On which date? (" + FORMAT_CMD + ")");
-        }
-
-        try {
-            return LocalDate.parse(dateStr, DATE_FORMATTER);
-        } catch (DateTimeParseException exception) {
-            throw new CmdFormatException("Sry bro can't understand that date format (" + FORMAT_DATE + ")");
-        }
+        return tasks;
     }
 
     /**
@@ -134,70 +117,32 @@ public class ListCmd extends Command {
         HashMap<Integer, Task> tasks = new HashMap<>();
 
         int listIndex = 1;
-        int lastAddedIndex = 0;
         for (Task task : taskTracker.getTasks()) {
-            if (task instanceof Deadline deadline) {
-                if (deadline.hasDate(date)) {
-                    tasks.put(listIndex, deadline);
-                    lastAddedIndex = listIndex;
-                }
-            } else if (task instanceof Event event) {
-                if (event.hasDate(date)) {
-                    tasks.put(listIndex, event);
-                    lastAddedIndex = listIndex;
-                }
+            if (isTaskOnDate(task, date)) {
+                tasks.put(listIndex, task);
             }
-
             listIndex++;
         }
+
         return tasks;
     }
 
     /**
-     * Returns the largest index amount the map of indices.
+     * Checks if a task occurs on the given date.
      *
-     * @param tasks The map of indices to tasks.
-     * @return The largest index.
+     * @param task The task to check.
+     * @param date The date to compare with.
+     * @return True if the task occurs on the date, false otherwise.
      */
-    private int getLargestIndex(HashMap<Integer, Task> tasks) {
-        int largest = -1;
-
-        for (int index : tasks.keySet()) {
-            if (largest < index) {
-                largest = index;
-            }
+    private boolean isTaskOnDate(Task task, LocalDate date) {
+        if (task instanceof Deadline deadline) {
+            return deadline.hasDate(date);
         }
 
-        return largest;
-    }
-
-    /**
-     * Converts the list of tasks into a list of response messages.
-     *
-     * @param tasks The list of tasks.
-     * @return A list of strings representing the tasks.
-     */
-    private List<String> convertToFoundList(HashMap<Integer, Task> tasks, String headerMsg) {
-        List<String> messages = new ArrayList<>();
-        messages.add(headerMsg);
-
-        // For indices with lesser digits, add buffer spaces to match highest number of digits.
-        // Ensures all strings that come after the indices are flush.
-        int lastAddedIndex = getLargestIndex(tasks);
-        int maxDigits = 1 + (int) Math.floor(Math.log10(lastAddedIndex));
-        for (int index : tasks.keySet()) {
-            Task task = tasks.get(index);
-            int curDigits = 1 + (int) Math.floor(Math.log10(index));
-
-            StringBuilder indexStr = new StringBuilder(index + ". ");
-            for (int i = 0; i < maxDigits - curDigits; i++) {
-                indexStr.append(" ");
-            }
-
-            messages.add(indexStr.toString() + task);
+        if (task instanceof Event event) {
+            return event.hasDate(date);
         }
 
-        return messages;
+        return false;
     }
-
 }

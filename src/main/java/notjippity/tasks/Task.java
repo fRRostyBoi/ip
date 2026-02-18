@@ -27,7 +27,7 @@ public abstract class Task {
     /**
      * Returns a new Task instance.
      *
-     * @param name The task name.
+     * @param name        The task name.
      * @param isCompleted Whether the task has been completed.
      */
     protected Task(String name, boolean isCompleted) {

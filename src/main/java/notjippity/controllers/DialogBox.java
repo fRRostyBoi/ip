@@ -34,9 +34,15 @@ public class DialogBox extends HBox {
         assert text != null;
         assert img != null;
 
-        assert dialog != null;
-        assert displayPicture != null;
+        loadFxml();
+        dialog.setText(text);
+        displayPicture.setImage(img);
+    }
 
+    /**
+     * Loads the FXML layout for the dialog box.
+     */
+    private void loadFxml() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(MainWindow.class.getResource("/view/DialogBox.fxml"));
             fxmlLoader.setController(this);
@@ -45,9 +51,6 @@ public class DialogBox extends HBox {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        dialog.setText(text);
-        displayPicture.setImage(img);
     }
 
     /**

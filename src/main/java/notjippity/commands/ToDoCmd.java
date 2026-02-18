@@ -36,7 +36,7 @@ public class ToDoCmd extends Command {
      */
     @Override
     public List<String> execute(String cmdStr, String argStr) throws MissingArgException {
-        handleMissingName(argStr);
+        validateArguments(argStr);
 
         Task task = new ToDo(argStr);
         taskTracker.addTask(task);
@@ -45,12 +45,12 @@ public class ToDoCmd extends Command {
     }
 
     /**
-     * Handles missing task name input in argStr.
+     * Validates that task name is provided.
      *
      * @param argStr The argument string.
-     * @throws MissingArgException If the arg string is null or bank.
+     * @throws MissingArgException If the arg string is null or blank.
      */
-    private void handleMissingName(String argStr) throws MissingArgException {
+    private void validateArguments(String argStr) throws MissingArgException {
         if (argStr == null || argStr.isBlank()) {
             throw new MissingArgException("Sooo... what's this task called? (" + FORMAT_CMD + ")");
         }
