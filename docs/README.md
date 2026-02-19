@@ -4,7 +4,10 @@
 
 NotJippity is a lightweight and powerful task manager app to help users stay organised and productive. With a unique messenger app-like interface, NotJippity allows users to easily create, manage, and track their tasks, events and deadlines. NotJippity is specially designed for fast typists, enabling them to quickly input and manage their tasks without the need for mouse interactions.
 
-## todo
+# Commands
+```<>``` represents a required argument, while ```[]``` represents an optional argument. Commands are case-insensitive, but arguments must be in order.
+
+## todo \<TaskName\>
 
 Adds a todo task to the list of tasks with the given name.
 
@@ -14,7 +17,7 @@ Expected Outcome:
 ```
 A new todo task named "Buy groceries for next week" is added to the list of tasks, and a confirmation message is displayed to the user.
 ```
-## deadline
+## deadline \<TaskName\> --by \<dd/MM/yyyy HHmm\>
 
 Adds a deadline task to the list of tasks with the given name and due date.
 
@@ -25,7 +28,7 @@ Expected Outcome:
 A new deadline task named "Submit assignment" with a due date of June 30, 2024, at 11:59 PM is added to the list of tasks, and a confirmation message is displayed to the user.
 ```
 
-## event
+## event \<TaskName\> --from \<dd/MM/yyyy HHmm\> --to \<dd/MM/yyyy HHmm\>
 
 Adds an event task to the list of tasks with the given name and event date.
 
@@ -36,7 +39,7 @@ Expected Outcome:
 A new event task named "Team meeting" with a start date and time of July 1, 2024, at 1:00 PM and an end date and time of July 1, 2024, at 3:00 PM is added to the list of tasks, and a confirmation message is displayed to the user.
 ```
 
-## list
+## list \[--date\] \[\dd/MM/yyyy]
 
 Displays the list of all tasks, including their names, types, and statuses.
 
@@ -54,7 +57,7 @@ Expected Outcome:
 The user is presented with a list of all tasks that are due on June 30, 2024, showing their names, types, and completion status.
 ```
 
-## done
+## done \<TaskIndex\>
 
 Marks a task as completed based on its index in the list.
 
@@ -65,7 +68,7 @@ Expected Outcome:
 The task at index 2 in the list is marked as completed, and a confirmation message is displayed to the user.
 ```
 
-## undo
+## undo \<TaskIndex\>
 
 Marks a task as incomplete based on its index in the list.
 
@@ -76,7 +79,7 @@ Expected Outcome:
 The task at index 2 in the list is marked as incomplete, and a confirmation message is displayed to the user.
 ```
 
-## toggle
+## toggle \<TaskIndex\>
 
 Toggles the completion status of a task based on its index in the list.
 
@@ -87,7 +90,7 @@ Expected Outcome:
 The completion status of the task at index 2 in the list is toggled (if it was completed, it becomes incomplete, and vice versa), and a confirmation message is displayed to the user.
 ```
 
-## delete
+## delete \<TaskIndex\>
 
 Deletes a task from the list based on its index.
 
@@ -98,7 +101,7 @@ Expected Outcome:
 The task at index 2 in the list is deleted, and a confirmation message is displayed to the user.
 ```
 
-## find
+## find \<Keyword(s)\>
 
 Searches for tasks that contain the specified keyword in their names, case-insensitive.
 
@@ -109,7 +112,7 @@ Expected Outcome:
 The user is presented with a list of tasks that contain the keyword "meeting" in their names, showing their names, types, and completion statuses.
 ```
 
-## note
+## note \[add/delete] \[add: Description / delete: NoteIndex\]
 
 Displays, adds, or deletes notes associated with a task based on its index in the list.
 
