@@ -18,22 +18,22 @@ A new todo task named "Buy groceries for next week" is added to the list of task
 
 Adds a deadline task to the list of tasks with the given name and due date.
 
-Example: `deadline Submit assignment /by 2024-06-30`
+Example: `deadline Submit assignment --by 30/06/2024 2359`
 
 Expected Outcome:
 ```
-A new deadline task named "Submit assignment" with a due date of June 30, 2024, is added to the list of tasks, and a confirmation message is displayed to the user.
+A new deadline task named "Submit assignment" with a due date of June 30, 2024, at 11:59 PM is added to the list of tasks, and a confirmation message is displayed to the user.
 ```
 
 ## event
 
 Adds an event task to the list of tasks with the given name and event date.
 
-Example: `event Team meeting /at 2024-07-01`
+Example: `event Team meeting --from 01/07/2024 1300 --to 01/07/2024 1500`
 
 Expected Outcome:
 ```
-A new event task named "Team meeting" with an event date of July 1, 2024, is added to the list of tasks, and a confirmation message is displayed to the user.
+A new event task named "Team meeting" with a start date and time of July 1, 2024, at 1:00 PM and an end date and time of July 1, 2024, at 3:00 PM is added to the list of tasks, and a confirmation message is displayed to the user.
 ```
 
 ## list
@@ -47,7 +47,7 @@ Expected Outcome:
 The user is presented with a list of all tasks, showing their names, types, and completion statuses.
 ```
 
-Example: `list --date 2024-06-30`
+Example: `list --date 30/06/2024`
 
 Expected Outcome:
 ```
