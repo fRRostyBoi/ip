@@ -23,6 +23,9 @@ public class TaskDataParser {
         if (dataParts.length < expectedLength) {
             throw new StorageException("Insufficient arguments; expected " + expectedLength
                     + " but found " + dataParts.length);
+        } else if (dataParts.length > expectedLength) {
+            throw new StorageException("Too many arguments; expected " + expectedLength
+                    + " but found " + dataParts.length);
         }
     }
 

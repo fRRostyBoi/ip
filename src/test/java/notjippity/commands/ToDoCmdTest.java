@@ -9,59 +9,74 @@ import org.junit.jupiter.api.Test;
 import notjippity.exceptions.MissingArgException;
 import notjippity.tasks.TaskTracker;
 
+/**
+ * Contains JUnit tests for the ToDoCmd class.
+ */
 public class ToDoCmdTest {
 
+    /**
+     * Tests the execute method with valid argument inputs.
+     * Verifies that no exceptions are thrown for valid inputs.
+     */
     @Test
-    public void testExecute() {
-        Ui ui = new Ui();
+    public void execute_validInputs_noException() {
         TaskTracker taskTracker = new TaskTracker();
 
-        // Test for null argStr
         try {
-            new ToDoCmd(ui, taskTracker).execute("todo", null);
+            new ToDoCmd(taskTracker).execute("todo", "test");
+            new ToDoCmd(taskTracker).execute("todo", "test one two three");
+        } catch (MissingArgException exception) {
+            fail();
+        }
+    }
+
+    /**
+     * Tests the execute method with various argument inputs.
+     * Verifies that MissingArgException is thrown for null, empty, and whitespace-only inputs.
+     * Verifies that valid inputs are accepted without throwing exceptions.
+     */
+    @Test
+    public void execute_invalidInputs_throwsRespectiveException() {
+        TaskTracker taskTracker = new TaskTracker();
+
+        // Null argStr
+        try {
+            new ToDoCmd(taskTracker).execute("todo", null);
             fail();
         } catch (MissingArgException exception) {
             assertEquals("Sooo... what's this task called? (" + FORMAT_CMD + ")", exception.getMessage());
         }
-        // Test for empty argStr
+
+        // Empty argStr
         try {
-            new ToDoCmd(ui, taskTracker).execute("todo", "");
+            new ToDoCmd(taskTracker).execute("todo", "");
             fail();
         } catch (MissingArgException exception) {
             assertEquals("Sooo... what's this task called? (" + FORMAT_CMD + ")", exception.getMessage());
         }
-        // Test for non-empty, but completely whitespace argStr
+
+        // Whitespace argStr
         try {
-            new ToDoCmd(ui, taskTracker).execute("todo", "             ");
+            new ToDoCmd(taskTracker).execute("todo", "         ");
             fail();
         } catch (MissingArgException exception) {
             assertEquals("Sooo... what's this task called? (" + FORMAT_CMD + ")", exception.getMessage());
         }
-        // Test for non-empty breakline argStr
+
+        // Breakline argStr
         try {
-            new ToDoCmd(ui, taskTracker).execute("todo", "\n");
+            new ToDoCmd(taskTracker).execute("todo", "\n");
             fail();
         } catch (MissingArgException exception) {
             assertEquals("Sooo... what's this task called? (" + FORMAT_CMD + ")", exception.getMessage());
         }
-        // Test for non-empty whitespace-into-breakline argStr
+
+        // Whitespace-into-breakline argStr
         try {
-            new ToDoCmd(ui, taskTracker).execute("todo", "     \n");
+            new ToDoCmd(taskTracker).execute("todo", "     \n");
             fail();
         } catch (MissingArgException exception) {
             assertEquals("Sooo... what's this task called? (" + FORMAT_CMD + ")", exception.getMessage());
-        }
-        // Normal argStr case
-        try {
-            new ToDoCmd(ui, taskTracker).execute("todo", "test");
-        } catch (MissingArgException exception) {
-            fail();
-        }
-        // Normal argStr case 2
-        try {
-            new ToDoCmd(ui, taskTracker).execute("todo", "test one two three");
-        } catch (MissingArgException exception) {
-            fail();
         }
     }
 
