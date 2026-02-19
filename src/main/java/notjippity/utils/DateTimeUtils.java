@@ -46,7 +46,7 @@ public class DateTimeUtils {
             throws CmdFormatException, MissingArgException {
         CmdValidator.validateNotNull(argStr, "On which date? (" + formatCmd + ")");
 
-        String dateStr = argStr.replaceFirst(flag, "").trim();
+        String dateStr = argStr.toLowerCase().replaceFirst(flag, "").trim();
         CmdValidator.validateNotEmpty(dateStr, "On which date? (" + formatCmd + ")");
 
         try {

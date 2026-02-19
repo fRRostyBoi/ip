@@ -52,6 +52,7 @@ public class ListCmd extends Command {
         }
 
         if (argStr.toLowerCase().startsWith("--date")) {
+            System.out.println("Yes");
             return executeWithDate(argStr);
         }
 

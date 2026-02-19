@@ -46,7 +46,7 @@ public class DeadlineCmd extends Command {
     public CmdOutput execute(String cmdStr, String argStr) throws CmdFormatException, MissingArgException {
         validateArguments(argStr);
 
-        String[] argSets = argStr.trim().split("--by");
+        String[] argSets = argStr.trim().split("--(?i)by");
         CmdValidator.validateNotEmpty(argSets.length > 1 ? argSets[1].trim() : null,
                 "Didja forget to put something at the back of --by? (" + FORMAT_CMD + ")");
 

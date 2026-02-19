@@ -101,14 +101,15 @@ public class EventCmd extends Command {
      */
     private String[] extractValuesFromFlags(String argStr) {
         // Attempts to extract task name, "from" and "to" value arguments in order
-        String[] exclNameArgs = argStr.trim().split("--from");
+        String[] exclNameArgs = argStr.trim().split("--(?i)from");
         String taskName = exclNameArgs[0].trim();
         String exclFromArgs = exclNameArgs[1].trim();
 
-        String[] exclToArgs = exclFromArgs.split("--to");
+        String[] exclToArgs = exclFromArgs.split("--(?i)to");
         String fromStr = exclToArgs[0].trim();
         String toStr = exclToArgs[1].trim();
 
         return new String[]{taskName, fromStr, toStr};
     }
+
 }
