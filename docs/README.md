@@ -136,7 +136,7 @@ If no tasks match the search criteria, a message indicating that no matching tas
 
 ## 10. Notes
 
-Without Flags: Displays all notes associated with the currently selected task.
+Without Flags: Displays all notes in the notes list.
 
 Syntax: `notes`
 
@@ -147,7 +147,7 @@ Displays the note list. If the note list is empty, a message indicating that the
 ```
 
 <br>
-With `Add` Flag: Adds a note to the currently selected task.
+With `Add` Flag: Adds a note to the notes list.
 
 Syntax: `notes add <Note>`
 
@@ -158,7 +158,7 @@ A new note "Remember to bring the report" is added to the note list, and a confi
 ```
 
 <br>
-With `Delete` Flag: Deletes a note from the currently selected task based on its index.
+With `Delete` Flag: Deletes a note from the notes list.
 
 Syntax: `notes delete <NoteIndex>`
 
