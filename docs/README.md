@@ -17,7 +17,7 @@ Syntax: `todo <Task>`
 Example: `todo Buy groceries for next week`<br>
 Expected Outcome:
 ```
-A new todo task named "Buy groceries for next week" is added to the list of tasks, and a confirmation message is displayed to the user.
+A new todo task "Buy groceries for next week" is added to the task list, and a confirmation message is displayed.
 ```
 
 ## 2. Deadline
@@ -29,7 +29,7 @@ Syntax: `deadline <Task> --by <dd/MM/yyyy HHmm>`
 Example: `deadline Submit assignment --by 30/06/2024 2359`<br>
 Expected Outcome:
 ```
-A new deadline task named "Submit assignment" with a due date of June 30, 2024, at 11:59 PM is added to the list of tasks, and a confirmation message is displayed to the user.
+A new deadline task "Submit assignment" due 30/6/24 2359h is added to the tasklist, and a confirmation message is displayed.
 ```
 
 ## 3. Event
@@ -38,10 +38,10 @@ Adds an event task to the list of tasks with the given name and event date.
 
 Syntax: `event <Task> --from <dd/MM/yyyy HHmm> --to <dd/MM/yyyy HHmm>`
 
-Example: `event Team meeting --from 01/07/2024 1300 --to 01/07/2024 1500`<br>
+Example: `event Team meeting --from 1/7/24 1300 --to 1/7/24 1500`<br>
 Expected Outcome:
 ```
-A new event task named "Team meeting" with a start date and time of July 1, 2024, at 1:00 PM and an end date and time of July 1, 2024, at 3:00 PM is added to the list of tasks, and a confirmation message is displayed to the user.
+A new event task "Team meeting" starting 1/7/25 1300h and ending 1/7/25 1500h is added to the task list, and a confirmation message is displayed.
 ```
 
 ## 4. List
@@ -53,18 +53,20 @@ Syntax: `list`
 Example: `list`<br>
 Expected Outcome:
 ```
-The user is presented with a list of all tasks, showing their names, types, and completion statuses.
+Displays list of all tasks, showing their names, types, and completion statuses.
+If the task list is empty, a message indicating that there are no tasks is displayed.
 ```
 
 <br>
-With `Date` Flag: Displays the list of tasks that are due on a specific date, including their names, types, and statuses.
+With `--date` Flag: Displays the list of tasks that are due on a specific date, including their names, types, and statuses.
 
 Syntax: `list --date <dd/MM/yyyy>`
 
 Example: `list --date 30/06/2024`<br>
 Expected Outcome:
 ```
-The user is presented with a list of all tasks that are due on June 30, 2024, showing their names, types, and completion status.
+The user is presented with a list of all tasks that are associated with 30/6/24, showing their names, types, and completion status.
+If no tasks are associated with that date, a message indicating that there are no tasks associated with that date is displayed.
 ```
 
 ## 5. Done
@@ -76,7 +78,8 @@ Syntax: `done <TaskIndex>`
 Example: `done 2`<br>
 Expected Outcome:
 ```
-The task at index 2 in the list is marked as completed, and a confirmation message is displayed to the user.
+The task at index 2 of the list is marked as completed, and a confirmation message is displayed.
+If task index 2 does not exist, an error message is displayed indicating that the task does not exist.
 ```
 
 ## 6. Undo
@@ -88,7 +91,8 @@ Syntax: `undo <TaskIndex>`
 Example: `undo 2`<br>
 Expected Outcome:
 ```
-The task at index 2 in the list is marked as incomplete, and a confirmation message is displayed to the user.
+The task at index 2 in the list is marked as incomplete, and a confirmation message is displayed.
+If task index 2 does not exist, an error message is displayed indicating that the task does not exist.
 ```
 
 ## 7. Toggle
@@ -100,7 +104,8 @@ Syntax: `toggle <TaskIndex>`
 Example: `toggle 2`<br>
 Expected Outcome:
 ```
-The completion status of the task at index 2 in the list is toggled (if it was completed, it becomes incomplete, and vice versa), and a confirmation message is displayed to the user.
+The completion status of the task at index 2 of the task list is toggled (if it was completed, it becomes incomplete, and vice versa), and a confirmation message is displayed.
+If task index 2 does not exist, an error message is displayed indicating that the task does not exist.
 ```
 
 ## 8. Delete
@@ -112,7 +117,8 @@ Syntax: `delete <TaskIndex>`
 Example: `delete 2`<br>
 Expected Outcome:
 ```
-The task at index 2 in the list is deleted, and a confirmation message is displayed to the user.
+The task at index 2 of the task list is deleted, and a confirmation message is displayed.
+If task index 2 does not exist, an error message is displayed indicating that the task does not exist.
 ```
 
 ## 9. Find
@@ -124,7 +130,8 @@ Syntax: `find <Keywords>`
 Example: `find meeT JoHn`<br>
 Expected Outcome:
 ```
-The user is presented with a list of tasks that contains the case-insensitive sequence "meeT JoHn" in their names, showing their names, types, and completion statuses.
+Displays the filtered task list of tasks containing the case-insensitive sequence "meeT JoHn" in their names.
+If no tasks match the search criteria, a message indicating that no matching tasks were found is displayed.
 ```
 
 ## 10. Notes
@@ -136,7 +143,7 @@ Syntax: `notes`
 Example: `notes`<br>
 Expected Outcome:
 ```
-A list of all tasks with their associated notes is displayed to the user
+Displays the note list. If the note list is empty, a message indicating that there are no notes is displayed.
 ```
 
 <br>
@@ -147,7 +154,7 @@ Syntax: `notes add <Note>`
 Example: `notes add Remember to bring the report`<br>
 Expected Outcome:
 ```
-The note "Remember to bring the report" is added to the currently selected task, and a confirmation message is displayed to the user.
+A new note "Remember to bring the report" is added to the note list, and a confirmation message is displayed.
 ```
 
 <br>
@@ -158,7 +165,8 @@ Syntax: `notes delete <NoteIndex>`
 Example: `notes delete 1`<br>
 Expected Outcome:
 ```
-The note at index 1 associated with the currently selected task is deleted, and a confirmation message is displayed to the user.
+The note at index 1 of the notes list is deleted, and a confirmation message is displayed.
+If notes list index 1 does not exist, an error message is displayed indicating that the note does not exist.
 ```
 
 ## 11. Bye
